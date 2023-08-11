@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2020-03-04: V1.0.0: Created. fhs
@@ -45,7 +45,7 @@ import java.util.Objects;
  * <p>This class is just a wrapper for the more general "SplitKeyEncryption" class
  * for the special case of a file as the source for the key input.</p>
  *
- * @author Frank Schwab, DB Systel GmbH
+ * @author Frank Schwab
  * @version 2.0.0
  */
 

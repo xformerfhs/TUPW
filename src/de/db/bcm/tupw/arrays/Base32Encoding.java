@@ -1,5 +1,6 @@
 /*
- * SPDX-FileCopyrightText: 2022 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Version: 1.3.1
  *

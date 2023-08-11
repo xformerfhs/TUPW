@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2017-04-10: V1.0.0: Created. fhs
@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * do not want to load a full RegEx machinery, like Java's String.split method does,
  * just to split a string at a simple character.</p>
  *
- * @author Frank Schwab, DB Systel GmbH
+ * @author Frank Schwab
  * @version 2.3.1
  */
 public class StringSplitter {

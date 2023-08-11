@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2015-09-26: V1.0.0: Created. fhs
@@ -49,7 +49,7 @@ import java.util.Objects;
  * The array is stored shuffled and masked.
  * </p>
  *
- * @author Frank Schwab, DB Systel GmbH
+ * @author Frank Schwab
  * @version 2.0.2
  */
 public final class ProtectedByteArray implements AutoCloseable {

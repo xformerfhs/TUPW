@@ -1,4 +1,9 @@
 /*
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * This is an implementation of the Xoroshiro128plusplus pseudo-random number generator
  * written in 2019 by David Blackman and Sebastiano Vigna.
  *

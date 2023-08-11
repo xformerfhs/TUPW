@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2018-05-25: V1.0.0: Created. fhs
@@ -28,7 +28,7 @@ package de.db.bcm.tupw.crypto;
 /**
  * Exception to indicate that data was tampered with
  *
- * @author FrankSchwab, DB Systel GmbH
+ * @author FrankSchwab
  * @version 1.0.2
  */
 public class DataIntegrityException extends Exception {

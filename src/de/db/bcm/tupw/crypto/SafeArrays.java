@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2018-06-13: V1.0.0: Created. fhs
@@ -33,7 +33,7 @@ import java.util.Objects;
 /**
  * Implement cryptographically safe array operations
  *
- * @author FrankSchwab, DB Systel GmbH
+ * @author FrankSchwab
  * @version 1.2.0
  */
 public final class SafeArrays {

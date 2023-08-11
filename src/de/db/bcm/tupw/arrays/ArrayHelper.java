@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2021-08-30: V1.0.0: Created. fhs
@@ -30,7 +30,7 @@ import java.util.Arrays;
 /**
  * Helper class for array operations that need a simpler interface
  *
- * @author Frank Schwab, DB Systel GmbH
+ * @author Frank Schwab
  * @version 1.0.2
  */
 public class ArrayHelper {

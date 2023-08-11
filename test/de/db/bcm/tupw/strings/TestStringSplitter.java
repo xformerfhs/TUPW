@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, DB Systel GmbH
- * All rights reserved.
+ * SPDX-FileCopyrightText: 2022-2023 DB Systel GmbH
+ * SPDX-FileCopyrightText: 2023 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Author: Frank Schwab, DB Systel GmbH
+ * Author: Frank Schwab
  *
  * Changes:
  *     2018-12-05: V1.0.0: Created. fhs
@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 /**
  * Test cases for string splitter
  *
- * @author Frank Schwab, DB Systel GmbH
+ * @author Frank Schwab
  * @version 1.0.1
  */
 public class TestStringSplitter {
