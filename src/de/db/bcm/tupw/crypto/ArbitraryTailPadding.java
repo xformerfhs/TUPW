@@ -32,6 +32,7 @@
  *     2020-12-04: V2.2.2: Corrected several SonarLint findings. fhs
  *     2020-12-29: V2.3.0: Made thread safe. fhs
  *     2021-09-01: V2.3.1: Renamed instance variable. fhs
+ *     2023-12-11: V2.3.2: Corrected comments. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -43,7 +44,7 @@ import java.util.Objects;
  * Implements arbitrary tail padding for block ciphers
  *
  * @author Frank Schwab
- * @version 2.3.1
+ * @version 2.3.2
  */
 public class ArbitraryTailPadding {
    //******************************************************************
@@ -149,6 +150,7 @@ public class ArbitraryTailPadding {
     * Get a random value as the padding byte
     * <p>
     * The padding byte must not have the same value as the last data byte
+    * </p>
     *
     * @param unpaddedSourceData Unpadded source data (may be empty)
     * @return Random byte to be used as the padding byte
@@ -173,6 +175,7 @@ public class ArbitraryTailPadding {
     * <p>
     * If the unpadded data already have a length that is a multiple of blockSize
     * an additional block with only padding bytes is added.
+    * </p>
     *
     * @param unpaddedLength Length of the unpadded data
     * @param blockSize      Block size of which the padding size has to be a multiple
