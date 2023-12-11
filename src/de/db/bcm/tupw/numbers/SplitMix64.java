@@ -30,6 +30,7 @@
  *     2020-03-23: V1.2.0: Restructured source code according to DBS programming guidelines. fhs
  *     2020-12-04: V1.2.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V1.3.0: Made thread safe. fhs
+ *     2023-12-11: V1.3.1: Standard naming convention for instance variables. fhs
  */
 
 package de.db.bcm.tupw.numbers;
@@ -42,7 +43,7 @@ import java.util.Objects;
  * <p>It is derived from the <a href="http://xoroshiro.di.unimi.it/splitmix64.c">C source code</a>.</p>
  *
  * @author Frank Schwab
- * @version 1.3.0
+ * @version 1.3.1
  */
 public class SplitMix64 extends SimplePseudoRandomNumberGenerator {
    //******************************************************************
@@ -52,7 +53,7 @@ public class SplitMix64 extends SimplePseudoRandomNumberGenerator {
    /**
     * State
     */
-   private long m_State;
+   private long state;
 
 
    //******************************************************************
@@ -65,7 +66,7 @@ public class SplitMix64 extends SimplePseudoRandomNumberGenerator {
     * @param seed Initial seed.
     */
    public SplitMix64(final long seed) {
-      m_State = seed;
+      state = seed;
    }
 
    /**
@@ -79,7 +80,7 @@ public class SplitMix64 extends SimplePseudoRandomNumberGenerator {
 
       // In a real object oriented language one would place "this(seed.longValue());"
       // here. But this is Java, so it is not possible to do this.
-      m_State = seed.longValue();
+      state = seed.longValue();
    }
 
 
@@ -94,7 +95,7 @@ public class SplitMix64 extends SimplePseudoRandomNumberGenerator {
     */
    @Override
    public synchronized long nextLong() {
-      long z = m_State += 0x9e3779b97f4a7c15L;
+      long z = state += 0x9e3779b97f4a7c15L;
       z = (z ^ (z >>> 30)) * 0xbf58476d1ce4e5b9L;
       z = (z ^ (z >>> 27)) * 0x94d049bb133111ebL;
       return z ^ (z >>> 31);

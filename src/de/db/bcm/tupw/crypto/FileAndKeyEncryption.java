@@ -25,6 +25,7 @@
  *     2020-12-04: V1.2.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V1.3.0: Made thread safe. fhs
  *     2021-08-30: V2.0.0: Removed deprecated "DecryptData" methods. fhs
+ *     2023-12-11: V2.0.1: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -46,7 +47,7 @@ import java.util.Objects;
  * for the special case of a file as the source for the key input.</p>
  *
  * @author Frank Schwab
- * @version 2.0.0
+ * @version 2.0.1
  */
 
 public class FileAndKeyEncryption implements AutoCloseable {
@@ -54,7 +55,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
    // Instance variables
    //******************************************************************
 
-   private final SplitKeyEncryption m_SplitKeyEncryption;
+   private final SplitKeyEncryption splitKeyEncryption;
 
 
    //******************************************************************
@@ -90,7 +91,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
       final byte[] keyFileBytes = getContentOfFile(keyFile);
 
       try {
-         m_SplitKeyEncryption = new SplitKeyEncryption(hmacKey, keyFileBytes);
+         splitKeyEncryption = new SplitKeyEncryption(hmacKey, keyFileBytes);
       } finally {
          ArrayHelper.clear(keyFileBytes);
       }
@@ -116,7 +117,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    public synchronized String encryptData(final byte[] byteArrayToEncrypt, final String subject)
          throws InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.encryptData(byteArrayToEncrypt, subject);
+      return splitKeyEncryption.encryptData(byteArrayToEncrypt, subject);
    }
 
    /**
@@ -129,7 +130,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    public synchronized String encryptData(final byte[] byteArrayToEncrypt)
          throws InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.encryptData(byteArrayToEncrypt);
+      return splitKeyEncryption.encryptData(byteArrayToEncrypt);
    }
 
    /**
@@ -143,7 +144,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    public synchronized String encryptData(final char[] characterArrayToEncrypt, final String subject)
          throws InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.encryptData(characterArrayToEncrypt, subject);
+      return splitKeyEncryption.encryptData(characterArrayToEncrypt, subject);
    }
 
    /**
@@ -156,7 +157,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    public synchronized String encryptData(final char[] characterArrayToEncrypt)
          throws InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.encryptData(characterArrayToEncrypt);
+      return splitKeyEncryption.encryptData(characterArrayToEncrypt);
    }
 
    /**
@@ -170,7 +171,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    public synchronized String encryptData(final String stringToEncrypt, final String subject)
          throws InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.encryptData(stringToEncrypt, subject);
+      return splitKeyEncryption.encryptData(stringToEncrypt, subject);
    }
 
    /**
@@ -204,7 +205,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
    public synchronized byte[] decryptDataAsByteArray(final String stringToDecrypt, final String subject)
          throws DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsByteArray(stringToDecrypt, subject);
+      return splitKeyEncryption.decryptDataAsByteArray(stringToDecrypt, subject);
    }
 
    /**
@@ -220,7 +221,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
    public synchronized byte[] decryptDataAsByteArray(final String stringToDecrypt)
          throws DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsByteArray(stringToDecrypt);
+      return splitKeyEncryption.decryptDataAsByteArray(stringToDecrypt);
    }
 
    /**
@@ -239,7 +240,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
          throws CharacterCodingException,
             DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsCharacterArray(stringToDecrypt, subject);
+      return splitKeyEncryption.decryptDataAsCharacterArray(stringToDecrypt, subject);
    }
 
    /**
@@ -257,7 +258,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
          throws CharacterCodingException,
             DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsCharacterArray(stringToDecrypt);
+      return splitKeyEncryption.decryptDataAsCharacterArray(stringToDecrypt);
    }
 
    /**
@@ -276,7 +277,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
          throws CharacterCodingException,
             DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsString(stringToDecrypt, subject);
+      return splitKeyEncryption.decryptDataAsString(stringToDecrypt, subject);
    }
 
    /**
@@ -294,7 +295,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
          throws CharacterCodingException,
             DataIntegrityException,
             InvalidCryptoParameterException {
-      return m_SplitKeyEncryption.decryptDataAsString(stringToDecrypt);
+      return splitKeyEncryption.decryptDataAsString(stringToDecrypt);
    }
 
    /*
@@ -308,7 +309,7 @@ public class FileAndKeyEncryption implements AutoCloseable {
     */
    @Override
    public synchronized void close() {
-      this.m_SplitKeyEncryption.close();
+      this.splitKeyEncryption.close();
    }
 
 

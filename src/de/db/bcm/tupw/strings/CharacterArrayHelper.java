@@ -61,7 +61,7 @@ public class CharacterArrayHelper {
     * <p>This class is not meant to be instantiated.</p>
     */
    private CharacterArrayHelper() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
 

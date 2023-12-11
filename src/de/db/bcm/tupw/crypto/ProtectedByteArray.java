@@ -33,6 +33,7 @@
  *     2021-05-27: V2.0.0: Byte array is protected by an index dependent masker now, no more need for an obfuscation array. fhs
  *     2021-06-09: V2.0.1: Simplified constructors. fhs
  *     2021-09-01: V2.0.2: Some refactoring. fhs
+ *     2023-12-11: V2.0.3: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -50,7 +51,7 @@ import java.util.Objects;
  * </p>
  *
  * @author Frank Schwab
- * @version 2.0.2
+ * @version 2.0.3
  */
 public final class ProtectedByteArray implements AutoCloseable {
    //******************************************************************
@@ -87,42 +88,42 @@ public final class ProtectedByteArray implements AutoCloseable {
    /**
     * Byte array to store the data in
     */
-   private byte[] m_ByteArray;
+   private byte[] dataArray;
 
    /**
     * Index array into {@code byteArray}
     */
-   private int[] m_IndexArray;
+   private int[] indexArray;
 
    /**
     * Length of data in {@code byteArray} in obfuscated form
     */
-   private int m_StoredArrayLength;
+   private int storedArrayLength;
 
    /**
     * Start position in index array
     */
-   private int m_IndexStart;
+   private int indexStart;
 
    /**
     * Hash code of data in {@code byteArray}
     */
-   private int m_HashCode;
+   private int hashCode;
 
    /**
     * Indicator whether the bytes of the source array have changed
     */
-   private boolean m_HasChanged;
+   private boolean hasChanged;
 
    /**
     * Is data valid?
     */
-   private boolean m_IsValid;
+   private boolean isValid;
 
    /**
     * Index masker
     */
-   private MaskedIndex m_IndexMasker;
+   private MaskedIndex indexMasker;
 
 
    //******************************************************************
@@ -197,7 +198,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    public synchronized byte getAt(final int externalIndex) {
       checkStateAndExternalIndex(externalIndex);
 
-      return (byte) (this.m_IndexMasker.getByteMask(externalIndex) ^ this.m_ByteArray[getArrayIndex(externalIndex)]);
+      return (byte) (this.indexMasker.getByteMask(externalIndex) ^ this.dataArray[getArrayIndex(externalIndex)]);
    }
 
    /**
@@ -211,9 +212,9 @@ public final class ProtectedByteArray implements AutoCloseable {
    public synchronized void setAt(final int externalIndex, final byte newValue) {
       checkStateAndExternalIndex(externalIndex);
 
-      this.m_ByteArray[getArrayIndex(externalIndex)] = (byte) (this.m_IndexMasker.getByteMask(externalIndex) ^ newValue);
+      this.dataArray[getArrayIndex(externalIndex)] = (byte) (this.indexMasker.getByteMask(externalIndex) ^ newValue);
 
-      this.m_HasChanged = true;
+      this.hasChanged = true;
    }
 
    /**
@@ -235,7 +236,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * {@code False}, if it has been deleted
     */
    public synchronized boolean isValid() {
-      return this.m_IsValid;
+      return this.isValid;
    }
 
    /**
@@ -248,10 +249,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    public synchronized int hashCode() {
       checkState();
 
-      if (this.m_HasChanged)
+      if (this.hasChanged)
          calculateHashCode();
 
-      return this.m_HashCode;
+      return this.hashCode;
    }
 
    /**
@@ -299,7 +300,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     */
    @Override
    public synchronized void close() {
-      if (this.m_IsValid)
+      if (this.isValid)
          clearData();
    }
 
@@ -361,7 +362,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @throws IllegalStateException if the protected array has already been destroyed
     */
    private void checkState() {
-      if (!this.m_IsValid)
+      if (!this.isValid)
          throw new IllegalStateException("ProtectedByteArray has already been destroyed");
    }
 
@@ -408,8 +409,8 @@ public final class ProtectedByteArray implements AutoCloseable {
     * Initializes the index array.
     */
    private void initializeIndexArray() {
-      for (int i = 0; i < this.m_IndexArray.length; i++)
-         this.m_IndexArray[i] = i;
+      for (int i = 0; i < this.indexArray.length; i++)
+         this.indexArray[i] = i;
    }
 
    /**
@@ -422,7 +423,7 @@ public final class ProtectedByteArray implements AutoCloseable {
 
       int count = 0;
 
-      final int arrayLength = this.m_IndexArray.length;
+      final int arrayLength = this.indexArray.length;
 
       do {
          i1 = sprng.nextInt(arrayLength);
@@ -430,9 +431,9 @@ public final class ProtectedByteArray implements AutoCloseable {
 
          // Swapping is inlined for performance
          if (i1 != i2) {
-            swap = this.m_IndexArray[i1];
-            this.m_IndexArray[i1] = this.m_IndexArray[i2];
-            this.m_IndexArray[i2] = swap;
+            swap = this.indexArray[i1];
+            this.indexArray[i1] = this.indexArray[i2];
+            this.indexArray[i2] = swap;
 
             count++;
          }
@@ -448,8 +449,8 @@ public final class ProtectedByteArray implements AutoCloseable {
     * Masks the index array.
     */
    private void maskIndexArray() {
-      for (int i = 0; i < this.m_IndexArray.length; i++)
-         this.m_IndexArray[i] ^= this.m_IndexMasker.getIntMask(i);
+      for (int i = 0; i < this.indexArray.length; i++)
+         this.indexArray[i] ^= this.indexMasker.getIntMask(i);
    }
 
    /**
@@ -467,24 +468,24 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @param sourceLength Length of source array
     */
    private void initializeDataStructures(final int sourceLength) {
-      this.m_IndexMasker = new MaskedIndex();
+      this.indexMasker = new MaskedIndex();
 
       final int storeLength = getStoreLength(sourceLength);
 
-      this.m_ByteArray = new byte[storeLength];
+      this.dataArray = new byte[storeLength];
 
       SecureRandom sprng = SecureRandomFactory.getSensibleSingleton();
 
-      sprng.nextBytes(this.m_ByteArray);   // Initialize the data with random values
+      sprng.nextBytes(this.dataArray);   // Initialize the data with random values
 
-      this.m_IndexArray = new int[storeLength];
+      this.indexArray = new int[storeLength];
 
       setUpIndexArray(sprng);
 
-      this.m_IndexStart = convertIndex(getStartIndex(sourceLength, storeLength, sprng), INDEX_START);
-      this.m_StoredArrayLength = convertIndex(sourceLength, INDEX_LENGTH);
+      this.indexStart = convertIndex(getStartIndex(sourceLength, storeLength, sprng), INDEX_START);
+      this.storedArrayLength = convertIndex(sourceLength, INDEX_LENGTH);
 
-      this.m_IsValid = true;
+      this.isValid = true;
    }
 
    /**
@@ -508,23 +509,23 @@ public final class ProtectedByteArray implements AutoCloseable {
     * Clears all data
     */
    private void clearData() {
-      this.m_HashCode = 0;
+      this.hashCode = 0;
 
-      this.m_StoredArrayLength = 0;
+      this.storedArrayLength = 0;
 
-      this.m_IndexStart = 0;
+      this.indexStart = 0;
 
-      this.m_HasChanged = false;
+      this.hasChanged = false;
 
-      this.m_IsValid = false;
+      this.isValid = false;
 
-      ArrayHelper.clear(this.m_ByteArray);
-      this.m_ByteArray = null;
+      ArrayHelper.clear(this.dataArray);
+      this.dataArray = null;
 
-      ArrayHelper.clear(this.m_IndexArray);
-      this.m_IndexArray = null;
+      ArrayHelper.clear(this.indexArray);
+      this.indexArray = null;
 
-      this.m_IndexMasker = null;
+      this.indexMasker = null;
    }
 
    /**
@@ -535,7 +536,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @return Converted index
     */
    private int convertIndex(final int sourceIndex, final int forPosition) {
-      return this.m_IndexMasker.getIntMask(forPosition) ^ sourceIndex;
+      return this.indexMasker.getIntMask(forPosition) ^ sourceIndex;
    }
 
    /**
@@ -545,9 +546,9 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @return The index into the byte array
     */
    private int getArrayIndex(final int externalIndex) {
-      final int position = externalIndex + convertIndex(this.m_IndexStart, INDEX_START);
+      final int position = externalIndex + convertIndex(this.indexStart, INDEX_START);
 
-      return convertIndex(this.m_IndexArray[position], position);
+      return convertIndex(this.indexArray[position], position);
    }
 
    /*
@@ -559,7 +560,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @return Real length
     */
    private int getRealLength() {
-      return convertIndex(this.m_StoredArrayLength, INDEX_LENGTH);
+      return convertIndex(this.storedArrayLength, INDEX_LENGTH);
    }
 
    /**
@@ -573,7 +574,7 @@ public final class ProtectedByteArray implements AutoCloseable {
       int sourceIndex = offset;
 
       for (int i = 0; i < len; i++) {
-         this.m_ByteArray[getArrayIndex(i)] = (byte) (this.m_IndexMasker.getByteMask(i) ^ sourceArray[sourceIndex]);
+         this.dataArray[getArrayIndex(i)] = (byte) (this.indexMasker.getByteMask(i) ^ sourceArray[sourceIndex]);
 
          sourceIndex++;
       }
@@ -588,7 +589,7 @@ public final class ProtectedByteArray implements AutoCloseable {
       final byte[] result = new byte[getRealLength()];
 
       for (int i = 0; i < result.length; i++)
-         result[i] = (byte) (this.m_IndexMasker.getByteMask(i) ^ this.m_ByteArray[getArrayIndex(i)]);
+         result[i] = (byte) (this.indexMasker.getByteMask(i) ^ this.dataArray[getArrayIndex(i)]);
 
       return result;
    }
@@ -599,10 +600,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    private void calculateHashCode() {
       final byte[] content = getValues();
 
-      this.m_HashCode = Arrays.hashCode(content);
+      this.hashCode = Arrays.hashCode(content);
 
       ArrayHelper.clear(content);  // Clear sensitive data
 
-      this.m_HasChanged = false;
+      this.hasChanged = false;
    }
 }

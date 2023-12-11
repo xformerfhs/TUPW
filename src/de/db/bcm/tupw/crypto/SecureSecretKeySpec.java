@@ -76,8 +76,8 @@ public class SecureSecretKeySpec implements KeySpec, SecretKey, Destroyable, Aut
    /*
     * Helper variables for compatible class check
     */
-   private final Class thisClass = this.getClass();
-   private Class compatibleClass;
+   private final Class<?> thisClass = this.getClass();
+   private Class<?> compatibleClass;
 
 
    //******************************************************************
@@ -216,7 +216,7 @@ public class SecureSecretKeySpec implements KeySpec, SecretKey, Destroyable, Aut
       if (obj == null)
          return false;
 
-      final Class objectClass = obj.getClass();
+      final Class<?> objectClass = obj.getClass();
 
       if ((objectClass != thisClass) &&
             (objectClass != compatibleClass))
@@ -322,7 +322,7 @@ public class SecureSecretKeySpec implements KeySpec, SecretKey, Destroyable, Aut
    private void checkAlgorithm(final String algorithm) {
       Objects.requireNonNull(algorithm, "Algorithm is null");
 
-      if (algorithm.length() == 0)
+      if (algorithm.isEmpty())
          throw new IllegalArgumentException("Algorithm is empty");
    }
 

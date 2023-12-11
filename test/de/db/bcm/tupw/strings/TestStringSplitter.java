@@ -66,7 +66,7 @@ public class TestStringSplitter {
    public void TestNullSearchString() {
       final String[] result = StringSplitter.split(null, "S");
 
-      assertNull("Null search string yields non-null result", result);
+      assertEquals("Null search string non-empty result", 0, result.length);
    }
 
    @Test

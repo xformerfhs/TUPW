@@ -28,6 +28,7 @@
  *     2020-12-04: V1.3.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V1.4.0: Made thread safe. fhs
  *     2020-12-30: V1.4.1: Removed synchronization where it was not necessary. fhs
+ *     2023-12-11: V1.4.2: Standard naming convention for instance variables. fhs
  */
 
 package de.db.bcm.tupw.statistics;
@@ -40,20 +41,20 @@ import java.util.Objects;
  * Class to calculate the entropy of byte arrays
  *
  * @author Frank Schwab
- * @version 1.4.1
+ * @version 1.4.2
  */
 public class EntropyCalculator {
    //******************************************************************
    // Private constants
    //******************************************************************
-   private final double LOG_2 = Math.log(2);
+   private final double log2 = Math.log(2);
 
 
    //******************************************************************
    // Instance variables
    //******************************************************************
-   private final int[] m_Counter = new int[256];  // Array of how many times a specific byte value was counted
-   private int m_ByteCount = 0;             // Number of bytes that have been added to the statistic
+   private final int[] counter = new int[256];  // Array of how many times a specific byte value was counted
+   private int byteCount = 0;             // Number of bytes that have been added to the statistic
 
 
    //******************************************************************
@@ -63,9 +64,9 @@ public class EntropyCalculator {
     * Reset the entropy statistics
     */
    public synchronized void reset() {
-      ArrayHelper.clear(m_Counter);
+      ArrayHelper.clear(counter);
 
-      m_ByteCount = 0;
+      byteCount = 0;
    }
 
    /**
@@ -88,10 +89,10 @@ public class EntropyCalculator {
       for (int i = fromIndex; i < toIndex; i++) {
          counterIndex = aByteArray[i] & 0xff; // Explicitly calculate the index ...
 
-         m_Counter[counterIndex]++;   // ... as the compiler converts this to "m_Counter[counterIndex] = m_Counter[counterIndex] + 1"
+         counter[counterIndex]++;   // ... as the compiler converts this to "m_Counter[counterIndex] = m_Counter[counterIndex] + 1"
       }
 
-      m_ByteCount += toIndex - fromIndex;
+      byteCount += toIndex - fromIndex;
    }
 
    /**
@@ -123,12 +124,12 @@ public class EntropyCalculator {
    public synchronized double getEntropy() {
       double result = 0.0;
 
-      if (m_ByteCount > 0) {
-         final double inverseByteCount = 1.0 / m_ByteCount;
+      if (byteCount > 0) {
+         final double inverseByteCount = 1.0 / byteCount;
 
          double p;
 
-         for (int value : m_Counter) {
+         for (int value : counter) {
             p = value * inverseByteCount;
 
             if (p != 0.0)
@@ -136,7 +137,7 @@ public class EntropyCalculator {
          }
       }
 
-      return result / LOG_2;
+      return result / log2;
    }
 
    /**
@@ -161,8 +162,8 @@ public class EntropyCalculator {
    public synchronized int getInformationInBits() {
       int result = 0;
 
-      if (m_ByteCount > 0)
-         result = (int) Math.round((getEntropy() * m_ByteCount));
+      if (byteCount > 0)
+         result = (int) Math.round((getEntropy() * byteCount));
 
       return result;
    }
@@ -173,6 +174,6 @@ public class EntropyCalculator {
     * @return Number of bytes that have been processed
     */
    public synchronized int getCount() {
-      return m_ByteCount;
+      return byteCount;
    }
 }

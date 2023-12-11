@@ -28,6 +28,7 @@
  *     2021-08-13: V1.5.0: Make algorithm to find SecureRandom algorithm more robust. fhs
  *     2021-08-31: V1.6.0: Pick strong default instance, if necessary. fhs
  *     2021-08-31: V1.6.1: Corrected variable names. fhs
+ *     2023-12-11: V1.6.2: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -40,7 +41,7 @@ import java.util.Set;
  * A class to get the most secure SecureRandom instance
  *
  * @author Frank Schwab
- * @version 1.6.1
+ * @version 1.6.2
  */
 public class SecureRandomFactory {
    //******************************************************************
@@ -53,15 +54,15 @@ public class SecureRandomFactory {
     * <p>This class is not meant to be instantiated.</p>
     */
    private SecureRandomFactory() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
    //******************************************************************
    // Instance variables
    //******************************************************************
 
-   private static String m_SecureAlgorithmName;
-   private static SecureRandom m_SecureRandomSingleton;
+   private static String secureAlgorithmName;
+   private static SecureRandom secureRandomSingleton;
 
 
    //******************************************************************
@@ -79,13 +80,13 @@ public class SecureRandomFactory {
       SecureRandom result;
 
       // Only get the name of the SecureRandom algorithm if it has not been determined, yet.
-      if (m_SecureAlgorithmName == null)
-         m_SecureAlgorithmName = getOptimalSecureRandomAlgorithmName();
+      if (secureAlgorithmName == null)
+         secureAlgorithmName = getOptimalSecureRandomAlgorithmName();
 
       // Use the optimal algorithm, if there is one
-      if (m_SecureAlgorithmName.length() > 0)
+      if (!secureAlgorithmName.isEmpty())
          try {
-            result = SecureRandom.getInstance(m_SecureAlgorithmName);
+            result = SecureRandom.getInstance(secureAlgorithmName);
          } catch (NoSuchAlgorithmException e) {
             // The chosen algorithm was not present, so use the default, which is guaranteed to work
             result = getDefaultInstance();
@@ -106,10 +107,10 @@ public class SecureRandomFactory {
     * @return Optimal SecureRandom singleton instance
     */
    public static synchronized SecureRandom getSensibleSingleton() {
-      if (m_SecureRandomSingleton == null)
-         m_SecureRandomSingleton = getSensibleInstance();
+      if (secureRandomSingleton == null)
+         secureRandomSingleton = getSensibleInstance();
 
-      return m_SecureRandomSingleton;
+      return secureRandomSingleton;
    }
 
 
@@ -196,7 +197,7 @@ public class SecureRandomFactory {
          result = new SecureRandom();
       }
 
-      m_SecureAlgorithmName = result.getAlgorithm();
+      secureAlgorithmName = result.getAlgorithm();
 
       return result;
    }

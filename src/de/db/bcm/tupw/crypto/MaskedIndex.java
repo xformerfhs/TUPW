@@ -24,6 +24,7 @@
  *     2022-11-07: V1.1.0: Better mixing of bytes from and to buffers. fhs
  *     2022-11-08: V1.2.0: Name all constants. fhs
  *     2022-12-22: V1.2.1: Removed unnecessary constant. fhs
+ *     2023-12-11: V1.2.2: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -38,7 +39,7 @@ import java.util.Arrays;
  * Class to get masks for array indices
  *
  * @author Frank Schwab, DB Systel
- * @version 1.2.1
+ * @version 1.2.2
  */
 public class MaskedIndex {
    //******************************************************************
@@ -92,17 +93,17 @@ public class MaskedIndex {
    /***
     * Encryptor to use
     */
-   private Cipher m_Encryptor;
+   private Cipher encryptor;
 
    /***
     * Source buffer for mask generation
     */
-   private final byte[] m_SourceBuffer = new byte[BUFFER_SIZE];
+   private final byte[] sourceBuffer = new byte[BUFFER_SIZE];
 
    /***
     * Buffer for encryption result
     */
-   private final byte[] m_MaskBuffer   = new byte[BUFFER_SIZE];
+   private final byte[] maskBuffer = new byte[BUFFER_SIZE];
 
    //******************************************************************
    // Constructor
@@ -130,10 +131,10 @@ public class MaskedIndex {
 
       getMaskBuffer(sanitizedIndex);
 
-      final int result = getMaskIntFromArray(m_MaskBuffer,
+      final int result = getMaskIntFromArray(maskBuffer,
             (7 * (sanitizedIndex % MOD_BUFFER_SIZE_FOR_INTEGER) + 3) % MOD_BUFFER_SIZE_FOR_INTEGER);
 
-      ArrayHelper.clear(m_MaskBuffer);
+      ArrayHelper.clear(maskBuffer);
 
       return result;
    }
@@ -149,9 +150,9 @@ public class MaskedIndex {
 
       getMaskBuffer(sanitizedIndex);
 
-      final byte result = m_MaskBuffer[(13 * (sanitizedIndex & BUFFER_SIZE_MASK) + 5) & BUFFER_SIZE_MASK];
+      final byte result = maskBuffer[(13 * (sanitizedIndex & BUFFER_SIZE_MASK) + 5) & BUFFER_SIZE_MASK];
 
-      ArrayHelper.clear(m_MaskBuffer);
+      ArrayHelper.clear(maskBuffer);
 
       return result;
    }
@@ -166,17 +167,17 @@ public class MaskedIndex {
     * @param sanitizedIndex Sanitized index to use for the mask calculation
     */
    private void getMaskBuffer(final int sanitizedIndex) {
-      Arrays.fill(m_SourceBuffer, BUFFER_PRIMER);
+      Arrays.fill(sourceBuffer, BUFFER_PRIMER);
 
       final int offset = (11 * (sanitizedIndex % MOD_BUFFER_SIZE_FOR_INTEGER) + 2) % MOD_BUFFER_SIZE_FOR_INTEGER;
-      storeIntInArray(sanitizedIndex, m_SourceBuffer, offset);
+      storeIntInArray(sanitizedIndex, sourceBuffer, offset);
 
       try {
-         m_Encryptor.doFinal(m_SourceBuffer, 0, m_SourceBuffer.length, m_MaskBuffer, 0);
+         encryptor.doFinal(sourceBuffer, 0, sourceBuffer.length, maskBuffer, 0);
       } catch (Exception ex) {
          // BadPaddingException, IllegalBlockSizeException and ShortBufferException can never happen
       } finally {
-         ArrayHelper.clear(m_SourceBuffer);
+         ArrayHelper.clear(sourceBuffer);
       }
    }
 
@@ -193,13 +194,13 @@ public class MaskedIndex {
       try {
          // ECB is an insecure mode but that is not a problem as
          // the cipher is only used for generating an obfuscation mask.
-         m_Encryptor = Cipher.getInstance("AES/ECB/NoPadding");
+         encryptor = Cipher.getInstance("AES/ECB/NoPadding");
 
          // This has to be "SecretKeySpec" and not "SecureSecretKeySpec".
          // Otherwise, we would have an infinite loop here.
          SecretKeySpec maskKey = new SecretKeySpec(key, "AES");
 
-         m_Encryptor.init(Cipher.ENCRYPT_MODE, maskKey);
+         encryptor.init(Cipher.ENCRYPT_MODE, maskKey);
       } catch (Exception ex) {
          // InvalidKeyException, NoSuchAlgorithmException and NoSuchPaddingException can never happen
       } finally {

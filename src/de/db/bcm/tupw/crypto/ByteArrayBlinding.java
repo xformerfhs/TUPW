@@ -90,7 +90,7 @@ public class ByteArrayBlinding {
     * <p>This class is not meant to be instantiated.</p>
     */
    private ByteArrayBlinding() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
 

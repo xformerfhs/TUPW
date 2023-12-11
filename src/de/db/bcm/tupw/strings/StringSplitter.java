@@ -32,23 +32,24 @@
  *     2020-12-04: V2.2.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V2.3.0: Made thread safe. fhs
  *     2023-03-29: V2.3.1: Made a little more efficient. fhs
+ *     2023-12-11: V3.0.0: Return an empty array if search string is null. fhs
  */
 package de.db.bcm.tupw.strings;
 
 import java.util.ArrayList;
 
 /**
- * Class to split a string at specified separator
+ * Class to split a string at a specified separator
  *
  * <p>This class is a modified version of the Apache Commons {@code StringUtil.splitByWholeSeparatorWorker}
- * to be found in the package {@code org.apache.commons.lang3} in the file {@code StringUtils.java}.</p>
+ * found in the package {@code org.apache.commons.lang3} in the file {@code StringUtils.java}.</p>
  *
  * <p>I wrote it because I absolutely do not like inefficiency in programming and I
  * do not want to load a full RegEx machinery, like Java's String.split method does,
  * just to split a string at a simple character.</p>
  *
  * @author Frank Schwab
- * @version 2.3.1
+ * @version 3.0.0
  */
 public class StringSplitter {
    //******************************************************************
@@ -61,7 +62,7 @@ public class StringSplitter {
     * <p>This class is not meant to be instantiated.</p>
     */
    private StringSplitter() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
 
@@ -86,11 +87,11 @@ public class StringSplitter {
     *
     * @param searchString The String to parse, may be {@code null}
     * @param separator    The String to be used as a separator
-    * @return An array of parsed Strings, {@code null} if {@code searchString} is {@code null}
+    * @return An array of parsed Strings. Returns an empty array if {@code searchString} is {@code null}.
     */
    public static synchronized String[] split(final String searchString, final String separator) {
       if (searchString == null)
-         return null;
+         return new String[0];
 
       final ArrayList<String> substrings = new ArrayList<>();
 

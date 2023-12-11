@@ -47,7 +47,7 @@ public final class SafeArrays {
     * <p>This class is not meant to be instantiated.</p>
     */
    private SafeArrays() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
    //******************************************************************

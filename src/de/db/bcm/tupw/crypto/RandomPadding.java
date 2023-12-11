@@ -29,6 +29,7 @@
  *     2020-12-04: V2.0.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V2.1.0: Made thread safe. fhs
  *     2021-09-01: V2.2.0: Added constructor. fhs
+ *     2023-12-11: V2.1.1: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -43,7 +44,7 @@ import java.util.Objects;
  * It can only be used to pad data where the length is known.</p>
  *
  * @author Frank Schwab
- * @version 2.2.0
+ * @version 2.2.1
  */
 public class RandomPadding {
    //******************************************************************
@@ -66,7 +67,7 @@ public class RandomPadding {
     * <p>This is placed here so the expensive instantiation of the SecureRandom
     * class is done only once.</p>
     */
-   private static final SecureRandom m_SecureRandom = SecureRandomFactory.getSensibleSingleton();
+   private static final SecureRandom secureRandom = SecureRandomFactory.getSensibleSingleton();
 
    //******************************************************************
    // Constructor
@@ -78,7 +79,7 @@ public class RandomPadding {
     * <p>This class is not meant to be instantiated.</p>
     */
    private RandomPadding() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
    //******************************************************************
@@ -110,7 +111,7 @@ public class RandomPadding {
       if (paddingLength > 0) {
          byte[] paddingBytes = new byte[paddingLength];
 
-         m_SecureRandom.nextBytes(paddingBytes);
+         secureRandom.nextBytes(paddingBytes);
 
          System.arraycopy(paddingBytes, 0, result, unpaddedSourceData.length, paddingLength);
       }

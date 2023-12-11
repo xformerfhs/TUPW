@@ -37,6 +37,7 @@
  *     2020-03-23: V1.2.0: Restructured source code according to DBS programming guidelines. fhs
  *     2020-12-04: V1.2.1: Corrected several SonarLint findings. fhs
  *     2020-12-29: V1.3.0: Made thread safe. fhs
+ *     2023-12-11: V1.3.1: Standard naming convention for instance variables. fhs
  */
 
 package de.db.bcm.tupw.numbers;
@@ -49,7 +50,7 @@ import java.util.Objects;
  * <p>It is derived from the <a href="http://prng.di.unimi.it/xoroshiro128plusplus.c">C source code</a>.</p>
  *
  * @author Frank Schwab
- * @version 1.3.0
+ * @version 1.3.1
  */
 public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
    //******************************************************************
@@ -59,8 +60,8 @@ public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
    /**
     * The state variables
     */
-   long m_State0 = -1L;
-   long m_State1 = 1L;
+   long state0 = -1L;
+   long state1 = 1L;
 
 
    //******************************************************************
@@ -96,8 +97,8 @@ public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
     * @param seed Initial seed array.
     */
    public Xoroshiro128plusplus(final long[] seed) {
-      m_State0 = seed[0];
-      m_State1 = seed[1];
+      state0 = seed[0];
+      state1 = seed[1];
    }
 
    /**
@@ -107,8 +108,8 @@ public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
     * @param seed1 Initial seed 2.
     */
    public Xoroshiro128plusplus(final long seed0,final long seed1) {
-      m_State0 = seed0;
-      m_State1 = seed1;
+      state0 = seed0;
+      state1 = seed1;
    }
 
    //******************************************************************
@@ -122,16 +123,16 @@ public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
     */
    @Override
    public synchronized long nextLong() {
-      final long s0 = m_State0;
-      long s1 = m_State1;
+      final long s0 = state0;
+      long s1 = state1;
 
       long result = s0 + s1;
       result = (result << 17 | result >>> 47) + s0;
 
       s1 ^= s0;
 
-      m_State0 = (s0 << 49 | s0 >>> 15) ^ s1 ^ (s1 << 21);
-      m_State1 = (s1 << 28 | s1 >>> 36);
+      state0 = (s0 << 49 | s0 >>> 15) ^ s1 ^ (s1 << 21);
+      state1 = (s1 << 28 | s1 >>> 36);
 
       return result;
    }
@@ -147,7 +148,7 @@ public class Xoroshiro128plusplus extends SimplePseudoRandomNumberGenerator {
    private void initializeState(final long seed) {
       SplitMix64 sm64 = new SplitMix64(seed);
 
-      m_State0 = sm64.nextLong();
-      m_State1 = sm64.nextLong();
+      state0 = sm64.nextLong();
+      state1 = sm64.nextLong();
    }
 }

@@ -75,6 +75,7 @@
  *     2021-09-23: V6.1.3: Ensure "equals" always clears sensitive data in SecureSecretKeySpec. fhs
  *     2021-10-18: V6.1.4: Corrected entropy threshold constant. fhs
  *     2023-03-29: V6.1.5: Corrected some typos. fhs
+ *     2023-12-11: V6.1.6: Standard naming convention for instance variables. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -101,7 +102,7 @@ import java.util.Objects;
  * Implement encryption by key generated from several source bytes and a key
  *
  * @author Frank Schwab
- * @version 6.1.4
+ * @version 6.1.6
  */
 
 public class SplitKeyEncryption implements AutoCloseable {
@@ -221,7 +222,7 @@ public class SplitKeyEncryption implements AutoCloseable {
     * <p>Unfortunately it can not be made final as the constructor of this class
     * may throw an exception.</p>
     */
-   private Mac m_HMAC;
+   private Mac hmac;
 
    /**
     * Instance of SecureRandom pseudo random number generator (PRNG)
@@ -229,7 +230,7 @@ public class SplitKeyEncryption implements AutoCloseable {
     * <p>This is placed here so the expensive instantiation of the SecureRandom class is
     * done only once.</p>
     */
-   private SecureRandom m_SecureRandom;
+   private SecureRandom secureRandom;
 
 
    //******************************************************************
@@ -272,8 +273,8 @@ public class SplitKeyEncryption implements AutoCloseable {
    // Instance variables
    //******************************************************************
 
-   private ProtectedByteArray m_EncryptionKey;
-   private ProtectedByteArray m_HMACKey;
+   private ProtectedByteArray encryptionKey;
+   private ProtectedByteArray hmacKey;
 
 
    //******************************************************************
@@ -593,8 +594,8 @@ public class SplitKeyEncryption implements AutoCloseable {
     */
    @Override
    public synchronized void close() {
-      this.m_EncryptionKey.close();
-      this.m_HMACKey.close();
+      this.encryptionKey.close();
+      this.hmacKey.close();
    }
 
 
@@ -610,10 +611,10 @@ public class SplitKeyEncryption implements AutoCloseable {
     */
    private Mac getHMACInstance()
          throws NoSuchAlgorithmException {
-      if (m_HMAC == null)
-         m_HMAC = Mac.getInstance(HMAC_256_ALGORITHM_NAME);
+      if (hmac == null)
+         hmac = Mac.getInstance(HMAC_256_ALGORITHM_NAME);
 
-      return m_HMAC;
+      return hmac;
    }
 
    /**
@@ -622,10 +623,10 @@ public class SplitKeyEncryption implements AutoCloseable {
     * @return SecureRandom instance
     */
    private SecureRandom getSecureRandomInstance() {
-      if (m_SecureRandom == null)
-         m_SecureRandom = SecureRandomFactory.getSensibleSingleton();
+      if (secureRandom == null)
+         secureRandom = SecureRandomFactory.getSensibleSingleton();
 
-      return m_SecureRandom;
+      return secureRandom;
    }
 
    /*
@@ -835,7 +836,7 @@ public class SplitKeyEncryption implements AutoCloseable {
     * @return SecureSecretKeySpec for default encryption key
     */
    private SecureSecretKeySpec getDefaultSecretKeySpecForEncryption() {
-      return getDefaultSecretKeySpecForKey(this.m_EncryptionKey, AES_ALGORITHM_NAME);
+      return getDefaultSecretKeySpecForKey(this.encryptionKey, AES_ALGORITHM_NAME);
    }
 
    /**
@@ -844,7 +845,7 @@ public class SplitKeyEncryption implements AutoCloseable {
     * @return SecureSecretKeySpec for default HMAC key
     */
    private SecureSecretKeySpec getDefaultSecretKeySpecForHMAC() {
-      return getDefaultSecretKeySpecForKey(this.m_HMACKey, HMAC_256_ALGORITHM_NAME);
+      return getDefaultSecretKeySpecForKey(this.hmacKey, HMAC_256_ALGORITHM_NAME);
    }
 
    /**
@@ -858,7 +859,7 @@ public class SplitKeyEncryption implements AutoCloseable {
          throws InvalidKeyException,
          NoSuchAlgorithmException {
       if (subjectBytes.length > 0)
-         return getSecretKeySpecForKeyWithSubject(this.m_HMACKey, this.m_EncryptionKey, AES_ALGORITHM_NAME, subjectBytes);
+         return getSecretKeySpecForKeyWithSubject(this.hmacKey, this.encryptionKey, AES_ALGORITHM_NAME, subjectBytes);
       else
          return getDefaultSecretKeySpecForEncryption();
    }
@@ -874,7 +875,7 @@ public class SplitKeyEncryption implements AutoCloseable {
          throws InvalidKeyException,
          NoSuchAlgorithmException {
       if (subjectBytes.length > 0)
-         return getSecretKeySpecForKeyWithSubject(this.m_EncryptionKey, this.m_HMACKey, HMAC_256_ALGORITHM_NAME, subjectBytes);
+         return getSecretKeySpecForKeyWithSubject(this.encryptionKey, this.hmacKey, HMAC_256_ALGORITHM_NAME, subjectBytes);
       else
          return getDefaultSecretKeySpecForHMAC();
    }
@@ -1197,14 +1198,14 @@ public class SplitKeyEncryption implements AutoCloseable {
          // 1. half of source bytes HMAC is used as the encryption key of this instance
          keyPart = Arrays.copyOfRange(hmacOfSourceBytes, 0, 16);
 
-         this.m_EncryptionKey = new ProtectedByteArray(keyPart);
+         this.encryptionKey = new ProtectedByteArray(keyPart);
 
          // 2. half of source bytes HMAC is used as the HMAC key of this instance
          keyPart = Arrays.copyOfRange(hmacOfSourceBytes, 16, 32);
 
          ArrayHelper.clear(hmacOfSourceBytes);
 
-         this.m_HMACKey = new ProtectedByteArray(keyPart);
+         this.hmacKey = new ProtectedByteArray(keyPart);
       } finally {
          ArrayHelper.safeClear(hmacOfSourceBytes);
          ArrayHelper.safeClear(keyPart);

@@ -142,7 +142,7 @@ public class Base32Encoding {
     * <p>This class is not meant to be instantiated.</p>
     */
    private Base32Encoding() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
 
@@ -381,7 +381,7 @@ public class Base32Encoding {
          for (byte b : aByteArray) {
             final int bNoSignExtension = b & BYTE_MASK;   // This stupid Java implicit sign extended conversion to int!!!!
 
-            actValue |= bNoSignExtension >>> (BITS_PER_BYTE - bitsRemaining);
+            actValue |= (byte) (bNoSignExtension >>> (BITS_PER_BYTE - bitsRemaining));
             result[arrayIndex] = mapByteToChar[actValue];
             arrayIndex++;
 

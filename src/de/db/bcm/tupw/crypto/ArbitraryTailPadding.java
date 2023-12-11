@@ -61,7 +61,7 @@ public class ArbitraryTailPadding {
     * <p>This is placed here so the expensive instantiation of the SecureRandom
     * class is done only once.</p>
     */
-   private static final SecureRandom m_SecureRandom = SecureRandomFactory.getSensibleSingleton();
+   private static final SecureRandom secureRandom = SecureRandomFactory.getSensibleSingleton();
 
 
    //******************************************************************
@@ -74,7 +74,7 @@ public class ArbitraryTailPadding {
     * <p>This class is not meant to be instantiated.</p>
     */
    private ArbitraryTailPadding() {
-      throw new IllegalStateException("Utility class");
+      throw new IllegalStateException("This class is not meant to be instantiated");
    }
 
 
@@ -156,13 +156,13 @@ public class ArbitraryTailPadding {
    private static byte getPaddingByteValue(final byte[] unpaddedSourceData) {
       final byte[] padByte = new byte[1];
 
-      m_SecureRandom.nextBytes(padByte);
+      secureRandom.nextBytes(padByte);
 
       if (unpaddedSourceData.length > 0) {
          final byte lastByte = unpaddedSourceData[unpaddedSourceData.length - 1];
 
          while (padByte[0] == lastByte)
-            m_SecureRandom.nextBytes(padByte);
+            secureRandom.nextBytes(padByte);
       }
 
       return padByte[0];
