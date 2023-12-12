@@ -49,7 +49,7 @@ public class SimplePseudoRandomNumberGenerator {
     */
    public synchronized long nextLong() {
       throw new UnsupportedOperationException("Method must be overridden");
-   }  // This method *must* be overridden
+   }
 
    /**
     * Get a pseudo-random {@code int} value
