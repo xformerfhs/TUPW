@@ -131,7 +131,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    //******************************************************************
 
    /**
-    * Constructor for the protected byte array with a source array
+    * Constructor for the protected byte array with a source array.
     *
     * @param sourceArray Source byte array.
     * @throws NullPointerException if {@code sourceArray} is {@code null}.
@@ -141,6 +141,15 @@ public final class ProtectedByteArray implements AutoCloseable {
       this(sourceArray, 0);
    }
 
+   /**
+    * Constructor for a protected byte array with a source array and an offset.
+    *
+    * @param sourceArray Source byte array.
+    * @param offset      The offset of the data in the byte array.
+    * @throws IllegalArgumentException if {@code sourceArray} is too large or {@code offset}
+    *                                  is larger than the array length.
+    * @throws NullPointerException if {@code sourceArray} is {@code null}.
+    */
    public ProtectedByteArray(final byte[] sourceArray, final int offset) {
       Objects.requireNonNull(sourceArray, "Source array is null");
 
@@ -155,10 +164,10 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @param offset      The offset of the data in the byte array.
     * @param len         The length of the data in the byte array.
     * @throws ArrayIndexOutOfBoundsException if {@code offset} or {@code len} are less than 0.
-    * @throws IllegalArgumentException       if {@code arrayToProtect} is not long enough to get
+    * @throws IllegalArgumentException       if {@code sourceArray} is not long enough to get
     *                                        {@code len} bytes from position {@code offset} in
-    *                                        array {@code arrayToProtect}.
-    * @throws NullPointerException           if {@code arrayToProtect} is null
+    *                                        array {@code sourceArray}.
+    * @throws NullPointerException           if {@code sourceArray} is null
     */
    public ProtectedByteArray(final byte[] sourceArray, final int offset, final int len) {
       Objects.requireNonNull(sourceArray, "Source array is null");

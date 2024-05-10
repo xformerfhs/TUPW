@@ -119,7 +119,15 @@ But it is still shorter than using the hexadecimal representation of the encrypt
 
 The encrypted data can only be decrypted with the same key sources and the same subject string.
 
+## Interface
+
+The JavaDoc documentation can be found in the `doc` directory.
+To read it click [here](doc/index.html).
+
 ## Command Line Program
+
+As an example of how to use the library there is a command line program in `TUPW.java`.
+It is just an example and is not necessary for the TUPW library.
 
 The command line program is used like this ('d:\someimage.jpg' is the name of the key file):
 
@@ -349,7 +357,7 @@ Feel free to submit a pull request with new features, improvements on tests or d
 
 ## Contact
 
-Frank Schwab ([Mail](mailto:github.sfdhi@slmails.com "Mail"))
+Frank Schwab ([Mail](mailto:xformer.github@proton.me "Mail"))
 
 ## License
 

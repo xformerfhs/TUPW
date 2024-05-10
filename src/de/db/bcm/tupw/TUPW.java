@@ -116,7 +116,7 @@ public class TUPW {
                itemIndex++;
             }
 
-            if (args[0].substring(0, 1).toLowerCase().equals("e")) {
+            if (args[0].substring(0, 1).equalsIgnoreCase("e")) {
                System.out.println(myEncryptor.encryptData(getInputFromWhereEver(args[itemIndex]), subject));
             } else {
                final char[] decryptedOutput = myEncryptor.decryptDataAsCharacterArray(getInputFromWhereEver(args[itemIndex]), subject);
