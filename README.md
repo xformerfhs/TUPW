@@ -122,7 +122,7 @@ The encrypted data can only be decrypted with the same key sources and the same 
 ## Interface
 
 The JavaDoc documentation can be found in the `doc` directory.
-To read it click [here](doc/index.html).
+To read it one needs to download the repository and double-click `doc/index.html`.
 
 ## Command Line Program
 
