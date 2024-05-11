@@ -362,4 +362,4 @@ Frank Schwab ([Mail](mailto:xformer.github@proton.me "Mail"))
 
 ## License
 
-TUPW is released under the Apache license, V2.0. See "LICENSE" for details.
+TUPW is released under the Apache license, V2.0. See [LICENSE](LICENSE) for details.
