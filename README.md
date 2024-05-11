@@ -121,8 +121,9 @@ The encrypted data can only be decrypted with the same key sources and the same 
 
 ## Interface
 
-The JavaDoc documentation can be found in the `doc` directory.
+The JavaDoc documentation can be found in the `javadoc` directory.
 To read it one needs to download the repository and double-click `doc/index.html`.
+There is also a write-up on the usage in the [USAGE](USAGE.md) document.
 
 ## Command Line Program
 

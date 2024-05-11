@@ -33,6 +33,7 @@
  *     2020-12-29: V2.3.0: Made thread safe. fhs
  *     2023-03-29: V2.3.1: Made a little more efficient. fhs
  *     2023-12-11: V3.0.0: Return an empty array if search string is null. fhs
+ *     2024-05-10: V3.0.1: Some small improvements. fhs
  */
 package de.db.bcm.tupw.strings;
 
@@ -49,9 +50,15 @@ import java.util.ArrayList;
  * just to split a string at a simple character.</p>
  *
  * @author Frank Schwab
- * @version 3.0.0
+ * @version 3.0.1
  */
 public class StringSplitter {
+   //******************************************************************
+   // Private constants
+   //******************************************************************
+
+   static final String[] EMPTY_STRING_ARRAY = new String[]{""};
+
    //******************************************************************
    // Constructor
    //******************************************************************
@@ -87,20 +94,18 @@ public class StringSplitter {
     *
     * @param searchString The String to parse, may be {@code null}
     * @param separator    The String to be used as a separator
-    * @return An array of parsed Strings. Returns an empty array if {@code searchString} is {@code null}.
+    * @return An array of parsed Strings. Returns an array with one empty string if {@code searchString} is {@code null}.
     */
    public static synchronized String[] split(final String searchString, final String separator) {
       if (searchString == null)
-         return new String[0];
+         return EMPTY_STRING_ARRAY;
 
       final ArrayList<String> substrings = new ArrayList<>();
 
       final int searchStringLength = searchString.length();
 
-      if (searchStringLength == 0)
-         substrings.add(searchString);  // Just return the search string if it is empty
-      else if (separator == null)
-         substrings.add(searchString);  // Just return the search string if the separator is null
+      if (searchStringLength == 0 || separator == null)
+         substrings.add(searchString);  // Just return the search string if it is empty or the separator is null
       else {
          final int separatorLength = separator.length();
 
@@ -111,7 +116,7 @@ public class StringSplitter {
       }
 
       // toArray needs a type model which should be empty as it is never used for anything else but casting
-      return substrings.toArray(new String[0]);
+      return substrings.toArray(EMPTY_STRING_ARRAY);
    }
 
 

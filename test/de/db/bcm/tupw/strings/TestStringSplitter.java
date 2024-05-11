@@ -21,6 +21,7 @@
  * Changes:
  *     2018-12-05: V1.0.0: Created. fhs
  *     2021-09-06: V1.0.1: Refactored empty string tests. fhs
+ *     2024-05-10: V1.0.2: Adapted null string tests. fhs
  */
 package de.db.bcm.tupw.strings;
 
@@ -32,7 +33,7 @@ import static org.junit.Assert.*;
  * Test cases for string splitter
  *
  * @author Frank Schwab
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class TestStringSplitter {
 
@@ -66,7 +67,8 @@ public class TestStringSplitter {
    public void TestNullSearchString() {
       final String[] result = StringSplitter.split(null, "S");
 
-      assertEquals("Null search string yields non-empty result", 0, result.length);
+      assertEquals("Null search string yields array which has not a length of 1", 1, result.length);
+      assertEquals("Null search string yields non-empty result string", "", result[0]);
    }
 
    @Test
