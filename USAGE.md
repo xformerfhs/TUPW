@@ -205,8 +205,6 @@ The generator would then need some code[^1] like the following:
 
 [^1]: `Xoroshiro128plusplus` is a deterministic pseudo-random number generator that is present in the `numbers` package of this library.
 
-It is not possible to verify the signatures of files in this repository with it.
-
 ```java
    {
       // 1. Create the HMAC key.
