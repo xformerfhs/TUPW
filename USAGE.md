@@ -86,12 +86,12 @@ And, of course, it may be not specified, at all.
 There are encryption methods for each data type and with and without a subject which makes 3*2=6 of them:
 
 ```java
-public String encryptData(final byte[] byteArrayToEncrypt) throws InvalidCryptoParameterException
-public String encryptData(final byte[] byteArrayToEncrypt, final String subject) throws InvalidCryptoParameterException
-public String encryptData(final char[] characterArrayToEncrypt) throws InvalidCryptoParameterException
-public String encryptData(final char[] characterArrayToEncrypt, final String subject) throws InvalidCryptoParameterException
-public String encryptData(final String stringToEncrypt) throws InvalidCryptoParameterExceptionpublic synchronized String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException
-public String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException
+public String encryptData(final byte[] byteArrayToEncrypt) throws InvalidCryptoParameterException;
+public String encryptData(final byte[] byteArrayToEncrypt, final String subject) throws InvalidCryptoParameterException;
+public String encryptData(final char[] characterArrayToEncrypt) throws InvalidCryptoParameterException;
+public String encryptData(final char[] characterArrayToEncrypt, final String subject) throws InvalidCryptoParameterException;
+public String encryptData(final String stringToEncrypt) throws InvalidCryptoParameterExceptionpublic synchronized String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException;
+public String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException;
 ```
 
 It is strongly advised to use the byte array or character array methods.
@@ -103,12 +103,12 @@ As with encryption, there are also 3*2=6 decryption methods.
 Their respective names say what type of data they return.
 
 ```java
-public byte[] decryptDataAsByteArray(final String stringToDecrypt) throws DataIntegrityException, InvalidCryptoParameterException
-public byte[] decryptDataAsByteArray(final String stringToDecrypt, final String subject) throws DataIntegrityException, InvalidCryptoParameterException
-public char[] decryptDataAsCharacterArray(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException
-public char[] decryptDataAsCharacterArray(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException
-public String decryptDataAsString(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException
-public String decryptDataAsString(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException
+public byte[] decryptDataAsByteArray(final String stringToDecrypt) throws DataIntegrityException, InvalidCryptoParameterException;
+public byte[] decryptDataAsByteArray(final String stringToDecrypt, final String subject) throws DataIntegrityException, InvalidCryptoParameterException;
+public char[] decryptDataAsCharacterArray(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
+public char[] decryptDataAsCharacterArray(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
+public String decryptDataAsString(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
+public String decryptDataAsString(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
 ```
 
 The decryption methods need to be used with a `SplitKeyEncryption` instance that has **exactly** the same parameters as the encrypting `SplitKeyEncryption` instance.
@@ -211,7 +211,7 @@ It is not possible to verify the signatures of files in this repository with it.
    {
       // 1. Create the HMAC key.
       //    Here a deterministic calculation is used to generate the key.
-      final byte hmacKey = createHMACKey()
+      final byte hmacKey = createHMACKey();
 
       // 2. Get sources.
       final byte[] uiColorBytes = System.getenv("UI_COLOR").getBytes(StandardCharsets.UTF_8);
@@ -247,15 +247,12 @@ This way one gets the encrypted tokens.
 When using the tokens in the application that needs the secrets one would use the library like this:
 
 ```java
-   import de.db.bcm.tupw.crypto.SplitKeyEncryption;
-
-import java.nio.charset.StandardCharsets;
    {
       // The first two parts are *exactly* the same as with encryption!
 
       // 1. Create the HMAC key.
       //    Here a deterministic calculation is used to generate the key.
-      final byte hmacKey = createHMACKey()
+      final byte hmacKey = createHMACKey();
 
       // 2. Get sources.
       final byte[] uiColorBytes = System.getenv("UI_COLOR").getBytes(StandardCharsets.UTF_8);
