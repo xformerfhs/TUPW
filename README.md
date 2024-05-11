@@ -74,7 +74,7 @@ Most attackers will not be able to do so and so will not be able to get at the k
 In a docker environment one can place a file in the docker image and delete it in the running container after it has been used for the instantiation of the class that implements the encryption.
 This way an attacker will not be able to access a part the keys are generated from and will have a harder time getting at them.
 
-BTW, Java's [SecretKeySpec](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/spec/SecretKeySpec.html) class is *not* secure, so TUPW uses a drop-in replacement called [SecureSecretKeySpec](https://github.com/dbsystel/SecureSecretKeySpec) to securely store the keys it uses.
+BTW, Java's [SecretKeySpec](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/spec/SecretKeySpec.html) class is *not* secure, so TUPW uses a drop-in replacement called [SecureSecretKeySpec](https://github.com/xformerfhs/SecureSecretKeySpec) to securely store the keys it uses.
 
 The minimum JRE version needed for this library is Java 8.
 
