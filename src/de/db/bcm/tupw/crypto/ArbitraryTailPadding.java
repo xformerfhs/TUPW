@@ -72,10 +72,10 @@ public class ArbitraryTailPadding {
    /**
     * Private constructor
     *
-    * <p>This class is not meant to be instantiated.</p>
+    * <p>This class is not meant to be instanced.</p>
     */
    private ArbitraryTailPadding() {
-      throw new IllegalStateException("This class is not meant to be instantiated");
+      throw new IllegalStateException("This class is not meant to be instanced");
    }
 
 

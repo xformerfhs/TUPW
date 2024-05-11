@@ -58,10 +58,10 @@ public class CharacterArrayHelper {
    /**
     * Private constructor
     *
-    * <p>This class is not meant to be instantiated.</p>
+    * <p>This class is not meant to be instanced.</p>
     */
    private CharacterArrayHelper() {
-      throw new IllegalStateException("This class is not meant to be instantiated");
+      throw new IllegalStateException("This class is not meant to be instanced");
    }
 
 

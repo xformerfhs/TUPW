@@ -312,8 +312,8 @@ One can also use a constant HMAC key and take the external bytes the key is calc
 
 The class instances then generate the keys from the HMAC and the supplied bytes and store these keys safely in the program's memory.
 
-The classes are meant to be instantiated once and then used throughout the lifetime of the program as needed.
-They should not be instantiated every time they are used as checking the supplied bytes and calculating the keys is quite expensive.
+The classes are meant to be instanced once and then used throughout the lifetime of the program as needed.
+They should not be instanced every time they are used as checking the supplied bytes and calculating the keys is quite expensive.
 The class stores the calculated key in a secure manner in an instance of the `SecureSecretKeySpec` class which can be found in the `Crypto` source directory.
 
 The supplied bytes and the key sources may have any name and any old content.
