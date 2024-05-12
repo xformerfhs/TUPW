@@ -172,7 +172,7 @@ public class ByteArrayBlinding {
                final int postfixBlindingLength = sourceBytes[INDEX_SOURCE_POSTFIX_LENGTH];
 
                final int totalBlindingLength = prefixBlindingLength + postfixBlindingLength;
-               final int dataLength = PackedUnsignedInteger.toIntegerFromArray(sourceBytes, INDEX_SOURCE_PACKED_LENGTH);
+               final int dataLength = PackedUnsignedInteger.toInteger(sourceBytes, INDEX_SOURCE_PACKED_LENGTH);
 
                // The largest number in the following addition can only be just over 1073741823
                // This can never overflow into negative values

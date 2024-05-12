@@ -29,6 +29,7 @@
  *     2020-04-22: V1.5.1: Removed unnecessary check and corrected some comments. fhs
  *     2020-12-04: V1.5.2: Corrected several SonarLint findings. fhs
  *     2020-12-29: V1.6.0: Made thread safe. fhs
+ *     2024-05-12: V2.0.0: Complete rewrite with much less complexity. fhs
  */
 package de.db.bcm.tupw.numbers;
 
@@ -39,34 +40,37 @@ import java.util.Objects;
  * Converts integers from and to an unsigned packed byte array
  *
  * @author FrankSchwab
- * @version 1.6.0
+ * @version 2.0.0
  */
 public class PackedUnsignedInteger {
    //******************************************************************
    // Private constants
    //******************************************************************
 
-   /*
-    * Range start values
-    */
-   private static final int START_2_BYTE_VALUE = 0x40;
-   private static final int START_3_BYTE_VALUE = 0x4040;
-   private static final int START_4_BYTE_VALUE = 0x404040;
-   private static final int START_TOO_LARGE_VALUE = 0x40404040;
+   /** Minimum allowed value */
+   private static final int MIN_INT_VALUE = 0;
+   /** Maximum allowed value */
+   private static final int MAX_INT_VALUE = 0x40404040 - 1;
 
-   /*
-    * Constants for masks
-   */
+   /** Offset for one result byte */
+   private static final int OFFSET = 0x40;
+
+   /** How many values can a byte hold */
+   private static final int BYTE_RANGE = 256;
+   /** Number of bits to shift a byte */
+   private static final int BYTE_SHIFT = 8;
+   /** Number of bits to shift for a length */
+   private static final int LENGTH_SHIFT = BYTE_SHIFT - 2;
+
+   /** Maximum result length */
+   private static final int MAX_RESULT_LENGTH = 4;
+   /** Maximum result index */
+   private static final int MAX_RESULT_INDEX = MAX_RESULT_LENGTH - 1;
+
+   /** Mask to get rid of the length bits */
    private static final int NO_LENGTH_MASK = 0x3f;
+   /** Mask to get the byte of an integer */
    private static final int BYTE_MASK = 0xff;
-
-   /*
-    * Constants for length indicators
-    */
-   // private static final byte LENGTH_1_MASK = (byte) 0;
-   private static final byte LENGTH_2_MASK = (byte) 0x40;
-   private static final byte LENGTH_3_MASK = (byte) 0x80;
-   private static final byte LENGTH_4_MASK = (byte) 0xc0;
 
    //******************************************************************
    // Constructor
@@ -98,52 +102,40 @@ public class PackedUnsignedInteger {
     * @throws IllegalArgumentException if {@code aNumber} has not a value between 0 and 1,077,952,575 (inclusive)
     */
    public static synchronized byte[] fromInteger(final int anInteger) {
-      byte[] result;
-      int intermediateInteger;
-
-      if (anInteger >= 0)
-         if (anInteger < START_2_BYTE_VALUE) {
-            result = new byte[1];
-            result[0] = (byte) anInteger;
-         } else if (anInteger < START_3_BYTE_VALUE) {
-            result = new byte[2];
-            intermediateInteger = anInteger - START_2_BYTE_VALUE;
-
-            result[1] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[0] = (byte) (LENGTH_2_MASK | intermediateInteger);
-         } else if (anInteger < START_4_BYTE_VALUE) {
-            result = new byte[3];
-            intermediateInteger = anInteger - START_3_BYTE_VALUE;
-
-            result[2] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[1] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[0] = (byte) (LENGTH_3_MASK | intermediateInteger);
-         } else if (anInteger < START_TOO_LARGE_VALUE) {
-            result = new byte[4];
-            intermediateInteger = anInteger - START_4_BYTE_VALUE;
-
-            result[3] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[2] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[1] = (byte) (intermediateInteger & BYTE_MASK);
-
-            intermediateInteger >>>= 8;
-            result[0] = (byte) (LENGTH_4_MASK | intermediateInteger);
-         } else
-            throw new IllegalArgumentException("Integer too large for packed integer");
-      else
+      if (anInteger < MIN_INT_VALUE)
          throw new IllegalArgumentException("Integer must not be negative");
 
-      return result;
+      if (anInteger > MAX_INT_VALUE)
+         throw new IllegalArgumentException("Integer too large for packed integer");
+
+      byte[] result = new byte[MAX_RESULT_LENGTH];
+      int intermediateInteger = anInteger;
+      int actIndex = MAX_RESULT_INDEX;
+      for (; intermediateInteger >= OFFSET; actIndex--) {
+         int b = intermediateInteger & BYTE_MASK;
+         intermediateInteger >>>= BYTE_SHIFT;
+
+         if (b >= OFFSET) {
+            b -= OFFSET;
+         } else {
+            b += (BYTE_RANGE - OFFSET);
+            intermediateInteger--;
+         }
+
+         result[actIndex] = (byte)b;
+      }
+
+      final int resultLengthBits = (MAX_RESULT_INDEX - actIndex);
+      // Leftmost byte is length bits and value
+      result[actIndex] = (byte)(intermediateInteger |
+                                resultLengthBits << LENGTH_SHIFT);
+
+      // Return result if it is 4 bytes long
+      // and a slice of the result, if it is less than 4 bytes long
+      if (resultLengthBits == MAX_RESULT_INDEX)
+         return result;
+      else
+         return Arrays.copyOfRange(result, actIndex, MAX_RESULT_LENGTH);
    }
 
    /**
@@ -167,41 +159,15 @@ public class PackedUnsignedInteger {
    public static synchronized int toInteger(final byte[] packedNumber) {
       Objects.requireNonNull(packedNumber, "Packed number is null");
 
-      int result = 0;
-
       final int expectedLength = getExpectedLength(packedNumber[0]);
 
-      if (expectedLength == packedNumber.length)
-         switch (expectedLength) {
-            case 1:
-               result = (packedNumber[0] & NO_LENGTH_MASK);
-               break;
-
-            case 2:
-               result = (((packedNumber[0] & NO_LENGTH_MASK) << 8) |
-                        (packedNumber[1] & BYTE_MASK)) +
-                        START_2_BYTE_VALUE;
-               break;
-
-            case 3:
-               result = (((((packedNumber[0] & NO_LENGTH_MASK) << 8) |
-                            (packedNumber[1] & BYTE_MASK)) << 8) |
-                            (packedNumber[2] & BYTE_MASK)) +
-                        START_3_BYTE_VALUE;
-               break;
-
-            case 4:
-               result = (((((((packedNumber[0] & NO_LENGTH_MASK) << 8) |
-                              (packedNumber[1] & BYTE_MASK)) << 8) |
-                              (packedNumber[2] & BYTE_MASK)) << 8) |
-                              (packedNumber[3] & BYTE_MASK)) +
-                        START_4_BYTE_VALUE;
-               break;
-
-            // There is no "else" case as all possible values of "expectedLength" are covered
-         }
-      else
+      if (expectedLength != packedNumber.length)
          throw new IllegalArgumentException("Actual length of packed integer array does not match expected length");
+
+      int result = packedNumber[0] & NO_LENGTH_MASK;
+      for (int i = 1; i < expectedLength; i++) {
+         result = ((result << 8) | (packedNumber[i] & BYTE_MASK)) + OFFSET;
+      }
 
       return result;
    }
@@ -215,7 +181,7 @@ public class PackedUnsignedInteger {
     * @throws IllegalArgumentException if the array is not long enough
     * @throws NullPointerException     if {@code arrayWithPackedNumber} is {@code null}
     */
-   public static synchronized int toIntegerFromArray(final byte[] arrayWithPackedNumber, final int startIndex) {
+   public static synchronized int toInteger(final byte[] arrayWithPackedNumber, final int startIndex) {
       Objects.requireNonNull(arrayWithPackedNumber, "Packed number array is null");
 
       final int expectedLength = getExpectedLength(arrayWithPackedNumber[startIndex]);
