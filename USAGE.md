@@ -174,7 +174,7 @@ final FileAndKeyEncryption myEncryptor = FileAndKeyEncryption(HMAC_KEY, keyFileP
 is equivalent to
 
 ```java
-final SplitKeyEncryption myEncryptor = SplitKeyEncryption(HMAC_KEY, contentOfFile(keyFilePath));
+final SplitKeyEncryption myEncryptor = SplitKeyEncryption(HMAC_KEY, Files.readAllBytes(Paths.get(keyFilePath)));
 ```
 
 So, this instance has exactly the same methods and interfaces as a `SplitKeyEncryption` instance.
