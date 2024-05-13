@@ -91,10 +91,10 @@ public class CharacterArrayHelper {
             // in the method signature is suppressed.
          }
 
-         // tempByteBuffer is guaranteed not be null here
-         // The encode method above can only throw runtime exceptions
-         // In this case we will not get here
-         // If we get here there was no runtime exception and tempByteBuffer is not null
+         // tempByteBuffer is guaranteed to not be null here.
+         // The encode method above can only throw runtime exceptions.
+         // In this case we will not get here.
+         // If we get here there was no runtime exception and tempByteBuffer is not null.
          result = Arrays.copyOf(tempByteBuffer.array(), tempByteBuffer.limit());
 
          ArrayHelper.clear(tempByteBuffer.array());
