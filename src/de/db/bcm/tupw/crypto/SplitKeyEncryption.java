@@ -76,6 +76,8 @@
  *     2021-10-18: V6.1.4: Corrected entropy threshold constant. fhs
  *     2023-03-29: V6.1.5: Corrected some typos. fhs
  *     2023-12-11: V6.1.6: Standard naming convention for instance variables. fhs
+ *     2024-05-10: V6.1.7: Better documentation. fhs
+ *     2024-05-12: V6.1.8: Simplified implementation of compressed integers. fhs
  */
 package de.db.bcm.tupw.crypto;
 
