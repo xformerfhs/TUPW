@@ -83,23 +83,20 @@ And, of course, it may be not specified, at all.
 
 ##### Encryption
 
-There are encryption methods for each data type and with and without a subject which makes 3*2=6 of them:
+There are encryption methods for each data type and with and without a subject which makes 2*2=4 of them:
 
 ```java
 public String encryptData(final byte[] byteArrayToEncrypt) throws InvalidCryptoParameterException;
 public String encryptData(final byte[] byteArrayToEncrypt, final String subject) throws InvalidCryptoParameterException;
 public String encryptData(final char[] characterArrayToEncrypt) throws InvalidCryptoParameterException;
 public String encryptData(final char[] characterArrayToEncrypt, final String subject) throws InvalidCryptoParameterException;
-public String encryptData(final String stringToEncrypt) throws InvalidCryptoParameterExceptionpublic synchronized String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException;
-public String encryptData(final String stringToEncrypt, final String subject) throws InvalidCryptoParameterException;
 ```
 
-It is strongly advised to use the byte array or character array methods.
-Strings are immutable in Java and secrets stored in them can not be cleared, so they will be visible in a memory dump.
+There are no methods to encrypt strings, since strings are immutable in Java and secrets stored in them can not be cleared, so they will be visible in a memory dump.
 
 ##### Decryption
 
-As with encryption, there are also 3*2=6 decryption methods.
+As with encryption, there are also 2*2=4 decryption methods.
 Their respective names say what type of data they return.
 
 ```java
@@ -107,13 +104,11 @@ public byte[] decryptDataAsByteArray(final String stringToDecrypt) throws DataIn
 public byte[] decryptDataAsByteArray(final String stringToDecrypt, final String subject) throws DataIntegrityException, InvalidCryptoParameterException;
 public char[] decryptDataAsCharacterArray(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
 public char[] decryptDataAsCharacterArray(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
-public String decryptDataAsString(final String stringToDecrypt) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
-public String decryptDataAsString(final String stringToDecrypt, final String subject) throws CharacterCodingException, DataIntegrityException, InvalidCryptoParameterException;
 ```
 
 The decryption methods need to be used with a `SplitKeyEncryption` instance that has **exactly** the same parameters as the encrypting `SplitKeyEncryption` instance.
 
-Once again, it is advisable to use the byte or character array methods, as their secrets can be cleared after use.
+Once again, strings are not supported, as they can not be cleared.
 
 ##### Close
 
