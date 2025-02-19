@@ -49,6 +49,7 @@ import de.db.bcm.tupw.numbers.Xoroshiro128plusplus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -94,13 +95,13 @@ public class TUPW {
          // One way is simply to use a static HMAC key which is only known to the program.
          // TODO: Do not use this constant byte array. Roll your own!!!!
          final byte[] HMAC_KEY = {(byte) 0x53, (byte) 0x67, (byte) 0xC3, (byte) 0x59,
-                  (byte) 0x4B, (byte) 0x46, (byte) 0x0F, (byte) 0xFA,
-                  (byte) 0x15, (byte) 0x21, (byte) 0x13, (byte) 0x6C,
-                  (byte) 0x7F, (byte) 0xDD, (byte) 0x33, (byte) 0x57,
-                  (byte) 0x26, (byte) 0xF3, (byte) 0x10, (byte) 0xA0,
-                  (byte) 0xE9, (byte) 0x16, (byte) 0xA4, (byte) 0x2E,
-                  (byte) 0x9E, (byte) 0x15, (byte) 0x8E, (byte) 0xF4,
-                  (byte) 0x03, (byte) 0x04, (byte) 0xAA, (byte) 0x2C};
+               (byte) 0x4B, (byte) 0x46, (byte) 0x0F, (byte) 0xFA,
+               (byte) 0x15, (byte) 0x21, (byte) 0x13, (byte) 0x6C,
+               (byte) 0x7F, (byte) 0xDD, (byte) 0x33, (byte) 0x57,
+               (byte) 0x26, (byte) 0xF3, (byte) 0x10, (byte) 0xA0,
+               (byte) 0xE9, (byte) 0x16, (byte) 0xA4, (byte) 0x2E,
+               (byte) 0x9E, (byte) 0x15, (byte) 0x8E, (byte) 0xF4,
+               (byte) 0x03, (byte) 0x04, (byte) 0xAA, (byte) 0x2C};
 
          // Another way is to calculate the HMAC key in a deterministic way
          // TODO: Do not use both HMAC keys. Choose one of them. You may keep the constant HMAC_KEY as a decoy.
@@ -117,7 +118,7 @@ public class TUPW {
             }
 
             if (args[0].substring(0, 1).equalsIgnoreCase("e")) {
-               System.out.println(myEncryptor.encryptData(getInputFromWhereEver(args[itemIndex]), subject));
+               System.out.println(myEncryptor.encryptData(getInputFromWhereEver(args[itemIndex]).toCharArray(), subject));
             } else {
                final char[] decryptedOutput = myEncryptor.decryptDataAsCharacterArray(getInputFromWhereEver(args[itemIndex]), subject);
 
@@ -171,11 +172,11 @@ public class TUPW {
    }
 
    /**
-    * Convert System.in input stream to a <code>String</code>
+    * Convert System.in input stream to a <code>char []</code>
     *
-    * @return Content of InputStream System.in as String
-    * @throws IllegalArgumentException if the input stream is too large
-    * @throws IOException              if there was an I/O error while reading the input bytes
+    * @return Content of InputStream System.in as character array
+    * @throws IllegalArgumentException Thrown, if the input stream is too large
+    * @throws IOException              Thrown, if there was an I/O error while reading the input bytes
     */
    static String getSystemInAsString() throws IllegalArgumentException, IOException {
       final ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -189,7 +190,7 @@ public class TUPW {
             throw new IllegalArgumentException("Input from input stream is larger than " + String.format("%,d", MAX_INPUT_BYTES) + " bytes");
       }
 
-      // Convert to String with Java file encoding
-      return result.toString(System.getProperty("file.encoding")).trim(); // Need trim here as pipes append an unnecessary newline
+      // Need trim here as pipes append an unnecessary newline
+      return result.toString(Charset.defaultCharset()).trim();
    }
 }

@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2020-2023 DB Systel GmbH
- * SPDX-FileCopyrightText: 2023-2024 Frank Schwab
+ * SPDX-FileCopyrightText: 2023-2025 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -26,6 +26,7 @@
  *     2020-12-29: V1.3.0: Made thread safe. fhs
  *     2021-08-30: V2.0.0: Removed deprecated "DecryptData" methods. fhs
  *     2023-12-11: V2.0.1: Standard naming convention for instance variables. fhs
+ *     2025-02-18: V3.0.0: Remove string encryptions and decryptions. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -47,9 +48,8 @@ import java.util.Objects;
  * for the special case of a file as the source for the key input.</p>
  *
  * @author Frank Schwab
- * @version 2.0.1
+ * @version 3.0.0
  */
-
 public class FileAndKeyEncryption implements AutoCloseable {
    //******************************************************************
    // Instance variables
@@ -68,10 +68,10 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * @param hmacKey     Key for the HMAC of the file
     * @param keyFilePath Key file path
     * @throws IllegalArgumentException The HMAC key or the size of the key file are not valid
-    * @throws InvalidKeyException      if the key is invalid (must never happen)
-    * @throws IOException              if there was an error while reading the key file
-    * @throws NoSuchAlgorithmException if the encryption algorithm is invalid (must never happen)
-    * @throws NullPointerException     if {@code hmacKey} or {@code keyFilePath} is {@code null}
+    * @throws InvalidKeyException      Thrown, if the key is invalid (must never happen)
+    * @throws IOException              Thrown, if there was an error while reading the key file
+    * @throws NoSuchAlgorithmException Thrown, if the encryption algorithm is invalid (must never happen)
+    * @throws NullPointerException     Thrown, if {@code hmacKey} or {@code keyFilePath} is {@code null}
     */
    public FileAndKeyEncryption(final byte[] hmacKey, final String keyFilePath)
          throws InvalidKeyException,
@@ -112,8 +112,8 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * @param byteArrayToEncrypt Byte array to encrypt
     * @param subject            The subject of this encryption
     * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt} or {@code subject} is {@code null}
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToEncrypt} or {@code subject} is {@code null}
     */
    public synchronized String encryptData(final byte[] byteArrayToEncrypt, final String subject)
          throws InvalidCryptoParameterException {
@@ -125,8 +125,8 @@ public class FileAndKeyEncryption implements AutoCloseable {
     *
     * @param byteArrayToEncrypt Byte array to encrypt
     * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt} or {@code subject} is {@code null}
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToEncrypt} or {@code subject} is {@code null}
     */
    public synchronized String encryptData(final byte[] byteArrayToEncrypt)
          throws InvalidCryptoParameterException {
@@ -139,8 +139,8 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * @param characterArrayToEncrypt Character array to encrypt
     * @param subject                 The subject of this encryption
     * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt} or {@code subject} is {@code null}
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToEncrypt} or {@code subject} is {@code null}
     */
    public synchronized String encryptData(final char[] characterArrayToEncrypt, final String subject)
          throws InvalidCryptoParameterException {
@@ -152,39 +152,12 @@ public class FileAndKeyEncryption implements AutoCloseable {
     *
     * @param characterArrayToEncrypt Character array to encrypt
     * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt} or {@code subject} is {@code null}
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToEncrypt} or {@code subject} is {@code null}
     */
    public synchronized String encryptData(final char[] characterArrayToEncrypt)
          throws InvalidCryptoParameterException {
       return splitKeyEncryption.encryptData(characterArrayToEncrypt);
-   }
-
-   /**
-    * Encrypt a string under a subject
-    *
-    * @param stringToEncrypt String to encrypt
-    * @param subject         The subject of this encryption
-    * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt} or {@code subject} is {@code null}
-    */
-   public synchronized String encryptData(final String stringToEncrypt, final String subject)
-         throws InvalidCryptoParameterException {
-      return splitKeyEncryption.encryptData(stringToEncrypt, subject);
-   }
-
-   /**
-    * Encrypt a string
-    *
-    * @param stringToEncrypt String to encrypt
-    * @return Printable form of the encrypted string
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToEncrypt}is {@code null}
-    */
-   public synchronized String encryptData(final String stringToEncrypt)
-         throws InvalidCryptoParameterException {
-      return encryptData(stringToEncrypt, "");
    }
 
    /*
@@ -197,10 +170,10 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * @param stringToDecrypt String to decrypt
     * @param subject         The subject of this decryption
     * @return Decrypted string as a byte array
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt} or {@code subject} is {@code null}
+    * @throws DataIntegrityException             Thrown, if the checksum does not match the data
+    * @throws IllegalArgumentException           Thrown, if the given string does not adhere to the format specification
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToDecrypt} or {@code subject} is {@code null}
     */
    public synchronized byte[] decryptDataAsByteArray(final String stringToDecrypt, final String subject)
          throws DataIntegrityException,
@@ -213,10 +186,10 @@ public class FileAndKeyEncryption implements AutoCloseable {
     *
     * @param stringToDecrypt String to decrypt
     * @return Decrypted string as a byte array
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt} or {@code subject} is {@code null}
+    * @throws DataIntegrityException             Thrown, if the checksum does not match the data
+    * @throws IllegalArgumentException           Thrown, if the given string does not adhere to the format specification
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToDecrypt} or {@code subject} is {@code null}
     */
    public synchronized byte[] decryptDataAsByteArray(final String stringToDecrypt)
          throws DataIntegrityException,
@@ -230,11 +203,11 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * @param stringToDecrypt String to decrypt
     * @param subject         The subject of this decryption
     * @return Decrypted string as a character array
-    * @throws CharacterCodingException           if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt} or {@code subject} is {@code null}
+    * @throws CharacterCodingException           Thrown, if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
+    * @throws DataIntegrityException             Thrown, if the checksum does not match the data
+    * @throws IllegalArgumentException           Thrown, if the given string does not adhere to the format specification
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToDecrypt} or {@code subject} is {@code null}
     */
    public synchronized char[] decryptDataAsCharacterArray(final String stringToDecrypt, final String subject)
          throws CharacterCodingException,
@@ -248,54 +221,17 @@ public class FileAndKeyEncryption implements AutoCloseable {
     *
     * @param stringToDecrypt String to decrypt
     * @return Decrypted string as a character array
-    * @throws CharacterCodingException           if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt} or {@code subject} is {@code null}
+    * @throws CharacterCodingException           Thrown, if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
+    * @throws DataIntegrityException             Thrown, if the checksum does not match the data
+    * @throws IllegalArgumentException           Thrown, if the given string does not adhere to the format specification
+    * @throws InvalidCryptoParameterException    Thrown, if a parameter of a cryptographic method is invalid (must never happen)
+    * @throws NullPointerException               Thrown, if {@code stringToDecrypt} or {@code subject} is {@code null}
     */
    public synchronized char[] decryptDataAsCharacterArray(final String stringToDecrypt)
          throws CharacterCodingException,
             DataIntegrityException,
             InvalidCryptoParameterException {
       return splitKeyEncryption.decryptDataAsCharacterArray(stringToDecrypt);
-   }
-
-   /**
-    * Decrypt an encrypted string under a subject as a string
-    *
-    * @param stringToDecrypt String to decrypt
-    * @param subject         The subject of this decryption
-    * @return Decrypted string
-    * @throws CharacterCodingException           if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt} or {@code subject} is {@code null}
-    */
-   public synchronized String decryptDataAsString(final String stringToDecrypt, final String subject)
-         throws CharacterCodingException,
-            DataIntegrityException,
-            InvalidCryptoParameterException {
-      return splitKeyEncryption.decryptDataAsString(stringToDecrypt, subject);
-   }
-
-   /**
-    * Decrypt an encrypted string as a string
-    *
-    * @param stringToDecrypt String to decrypt
-    * @return Decrypted string
-    * @throws CharacterCodingException           if the data contain a byte sequence that can not be interpreted as a valid UTF-8 byte sequence
-    * @throws DataIntegrityException             if the checksum does not match the data
-    * @throws IllegalArgumentException           if the given string does not adhere to the format specification
-    * @throws InvalidCryptoParameterException    if a parameter of a cryptographic method is invalid (must never happen)
-    * @throws NullPointerException               if {@code stringToDecrypt}is {@code null}
-    */
-   public synchronized String decryptDataAsString(final String stringToDecrypt)
-         throws CharacterCodingException,
-            DataIntegrityException,
-            InvalidCryptoParameterException {
-      return splitKeyEncryption.decryptDataAsString(stringToDecrypt);
    }
 
    /*
@@ -321,8 +257,8 @@ public class FileAndKeyEncryption implements AutoCloseable {
     * Get the content of the key file
     *
     * @param keyFile Key file to be used
-    * @throws IllegalArgumentException if key file does not exist
-    * @throws IOException              if there is an error reading the key file
+    * @throws IllegalArgumentException Thrown, if key file does not exist
+    * @throws IOException              Thrown, if there is an error reading the key file
     */
    private byte[] getContentOfFile(final Path keyFile)
          throws IOException {

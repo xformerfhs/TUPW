@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2015-2023 DB Systel GmbH
- * SPDX-FileCopyrightText: 2023-2024 Frank Schwab
+ * SPDX-FileCopyrightText: 2023-2025 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -27,8 +27,9 @@
  *     2020-02-28: V1.5.0: Added test with not enough information in source bytes. fhs
  *     2020-03-04: V1.6.0: Split test cases for "FileAndKeyEncryption" and "SplitKeyEncryption". fhs
  *     2020-03-20: V1.7.0: Test new interfaces for byte and character arrays. fhs
- *     2020-05-14: V1.8.0: Correct usage of close interface. fhs
+ *     2020-05-14: V1.8.0: Corrected usage of close interface. fhs
  *     2021-09-03: V1.8.1: Use try-with-resources. fhs
+ *     2025-02-18: V2.0.0: Removed string tests and use character arrays, instead. fhs
  */
 package de.db.bcm.tupw.crypto;
 
@@ -44,7 +45,7 @@ import static org.junit.Assert.*;
  * Test cases for file and key encryption.
  *
  * @author Frank Schwab
- * @version 1.8.1
+ * @version 2.0.0
  */
 public class TestFileAndKeyEncryption {
 
@@ -74,7 +75,7 @@ public class TestFileAndKeyEncryption {
    /**
     * Known clear text to encrypt
     */
-   private static final String CLEAR_TEXT_V5 = "This#”s?a§StR4nGé€PàS!Wörd9";
+   private static final char[] CLEAR_TEXT_V5 = "This#”s?a§StR4nGé€PàS!Wörd9".toCharArray();
 
    /**
     * Known encrypted text to decrypt
@@ -86,6 +87,7 @@ public class TestFileAndKeyEncryption {
     * Public methods
     */
    public TestFileAndKeyEncryption() {
+      // Intentionally left empty
    }
 
    /**
@@ -126,10 +128,12 @@ public class TestFileAndKeyEncryption {
 
    @Before
    public void setUp() {
+      // Intentionally left empty
    }
 
    @After
    public void tearDown() {
+      // Intentionally left empty
    }
 
    /**
@@ -181,9 +185,9 @@ public class TestFileAndKeyEncryption {
       try (final FileAndKeyEncryption myEncryptor = new FileAndKeyEncryption(HMAC_KEY, NOT_RANDOM_FILE_NAME)) {
          String encryptedText = myEncryptor.encryptData(CLEAR_TEXT_V5);
 
-         String decryptedText = myEncryptor.decryptDataAsString(encryptedText);
+         char[] decryptedText = myEncryptor.decryptDataAsCharacterArray(encryptedText);
 
-         assertEquals("Decrypted text is not the same as original text", CLEAR_TEXT_V5, decryptedText);
+         assertArrayEquals("Decrypted text is not the same as original text", CLEAR_TEXT_V5, decryptedText);
       } catch (Exception e) {
          e.printStackTrace();
          fail("Exception: " + e.toString());
@@ -198,9 +202,9 @@ public class TestFileAndKeyEncryption {
       try (final FileAndKeyEncryption myEncryptor = new FileAndKeyEncryption(HMAC_KEY, NOT_RANDOM_FILE_NAME)) {
          String encryptedText = myEncryptor.encryptData(CLEAR_TEXT_V5, SUBJECT);
 
-         String decryptedText = myEncryptor.decryptDataAsString(encryptedText, SUBJECT);
+         char[] decryptedText = myEncryptor.decryptDataAsCharacterArray(encryptedText, SUBJECT);
 
-         assertEquals("Decrypted text is not the same as original text", CLEAR_TEXT_V5, decryptedText);
+         assertArrayEquals("Decrypted text is not the same as original text", CLEAR_TEXT_V5, decryptedText);
       } catch (Exception e) {
          e.printStackTrace();
          fail("Exception: " + e.toString());
@@ -222,29 +226,6 @@ public class TestFileAndKeyEncryption {
 
          // This must throw an exception as the original byte array is not a valid UTF-8 encoding
          myEncryptor.decryptDataAsCharacterArray(encryptedText);
-
-         fail("Expected exception not thrown");
-      } catch (Exception e) {
-         String message = e.toString();
-         assertTrue("Unexpected exception: " + message, message.contains("MalformedInputException"));
-      }
-   }
-
-   /**
-    * Test if the decryption of a byte array throws an exception if decrypted as a string.
-    */
-   @Test
-   public void TestDecryptionToStringWithInvalidByteArray() {
-      final byte[] testByteArray = new byte[256];
-
-      for (int i = 0; i < testByteArray.length; i++)
-         testByteArray[i] = (byte) (0xff - i);
-
-      try (final FileAndKeyEncryption myEncryptor = new FileAndKeyEncryption(HMAC_KEY, NOT_RANDOM_FILE_NAME)) {
-         String encryptedText = myEncryptor.encryptData(testByteArray);
-
-         // This must throw an exception as the original byte array is not a valid UTF-8 encoding
-         myEncryptor.decryptDataAsString(encryptedText);
 
          fail("Expected exception not thrown");
       } catch (Exception e) {
@@ -280,7 +261,7 @@ public class TestFileAndKeyEncryption {
       String anInvalidFileName = "|<>&";
 
       try (final FileAndKeyEncryption myEncryptor = new FileAndKeyEncryption(HMAC_KEY, anInvalidFileName)) {
-         myEncryptor.decryptDataAsString(NOT_RANDOM_FILE_NAME);
+         myEncryptor.decryptDataAsCharacterArray(NOT_RANDOM_FILE_NAME);
 
          myEncryptor.close();
 
@@ -298,7 +279,7 @@ public class TestFileAndKeyEncryption {
    @Test
    public void TestNullFileName() {
       try (final FileAndKeyEncryption myEncryptor = new FileAndKeyEncryption(HMAC_KEY, null)) {
-         myEncryptor.decryptDataAsString(NOT_RANDOM_FILE_NAME);
+         myEncryptor.decryptDataAsCharacterArray(NOT_RANDOM_FILE_NAME);
 
          fail("Expected exception not thrown");
       } catch (Exception e) {
