@@ -154,8 +154,8 @@ public class TUPW {
     * @param anArgument The command line argument that is either the data,
     *                   or "-"
     * @return Data to process
-    * @throws IllegalArgumentException if input stream is toot large
-    * @throws IOException              if there was an I/O error when reading the input bytes
+    * @throws IllegalArgumentException Thrown, if input stream is too large
+    * @throws IOException              Thrown, if there was an I/O error when reading the input bytes
     */
    static String getInputFromWhereEver(final String anArgument) throws IllegalArgumentException, IOException {
       String result;

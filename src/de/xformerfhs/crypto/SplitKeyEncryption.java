@@ -78,7 +78,8 @@
  *     2023-12-11: V6.1.6: Standard naming convention for instance variables. fhs
  *     2024-05-10: V6.1.7: Better documentation. fhs
  *     2024-05-12: V6.1.8: Simplified implementation of compressed integers. fhs
- *     2024-05-12: V7.0.0: Removed methods to encrypt and decrypt strings. fhs
+ *     2025-02-19: V7.0.0: Removed methods to encrypt and decrypt strings. fhs
+ *     2025-02-20: V7.1.0: Simplified MaskedIndex. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -105,7 +106,7 @@ import java.util.Objects;
  * Implement encryption by a key generated from several source bytes and a key creation key
  *
  * @author Frank Schwab
- * @version 7.0.0
+ * @version 7.1.0
  */
 
 public class SplitKeyEncryption implements AutoCloseable {
