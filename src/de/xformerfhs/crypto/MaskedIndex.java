@@ -1,6 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2021-2023 DB Systel GmbH
- * SPDX-FileCopyrightText: 2023-2024 Frank Schwab
+ * SPDX-FileCopyrightText: 2023-2025 Frank Schwab
  *
  * SPDX-License-Identifier: Apache-2.0
  *
