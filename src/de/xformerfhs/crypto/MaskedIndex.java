@@ -169,7 +169,7 @@ public class MaskedIndex {
       // Get random key
       sprng.nextBytes(key);
 
-      // Fill source buffer with a random prefix
+      // Fill source buffer with a random value
       sprng.nextBytes(sourceBuffer);
 
       // Set high bytes
