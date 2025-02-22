@@ -26,6 +26,7 @@
  *     2022-12-22: V1.2.1: Removed unnecessary constant. fhs
  *     2023-12-11: V1.2.2: Standard naming convention for instance variables. fhs
  *     2025-02-20: V2.0.0: Simplify to sort of counter mode. fhs
+ *     2025-02-22: V3.0.0: Renamed. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -36,12 +37,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
 /**
- * Class to get masks for array indices
+ * Class to get indexed masks for array indices
  *
- * @author Frank Schwab, DB Systel
- * @version 2.0.0
+ * @author Frank Schwab
+ * @version 3.0.0
  */
-public class MaskedIndex {
+public class IndexedMask {
    //******************************************************************
    // Private constants
    //******************************************************************
@@ -88,9 +89,9 @@ public class MaskedIndex {
    //******************************************************************
 
    /**
-    * The constructor for an instance of MaskedIndex
+    * The constructor for an instance of IndexedMask
     */
-   public MaskedIndex() {
+   public IndexedMask() {
       initializeCipher();
    }
 

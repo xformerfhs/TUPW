@@ -34,6 +34,7 @@
  *     2021-06-09: V2.0.1: Simplified constructors. fhs
  *     2021-09-01: V2.0.2: Some refactoring. fhs
  *     2023-12-11: V2.0.3: Standard naming convention for instance variables. fhs
+ *     2025-02-22: V2.1.0: use Fisher-Yates shuffling for shuffling of index array. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -51,7 +52,7 @@ import java.util.Objects;
  * </p>
  *
  * @author Frank Schwab
- * @version 2.0.3
+ * @version 2.1.0
  */
 public final class ProtectedByteArray implements AutoCloseable {
    //******************************************************************
@@ -123,7 +124,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    /**
     * Index masker
     */
-   private MaskedIndex indexMasker;
+   private IndexedMask indexMasker;
 
 
    //******************************************************************
@@ -464,7 +465,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * @param sourceLength Length of source array
     */
    private void initializeDataStructures(final int sourceLength) {
-      this.indexMasker = new MaskedIndex();
+      this.indexMasker = new IndexedMask();
 
       final int storeLength = getStoreLength(sourceLength);
 
