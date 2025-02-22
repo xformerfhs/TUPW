@@ -80,6 +80,7 @@
  *     2024-05-12: V6.1.8: Simplified implementation of compressed integers. fhs
  *     2025-02-19: V7.0.0: Removed methods to encrypt and decrypt strings. fhs
  *     2025-02-20: V7.1.0: Simplified MaskedIndex. fhs
+ *     2025-02-22: V7.2.0: Improved ProtectedByteArray. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -106,7 +107,7 @@ import java.util.Objects;
  * Implement encryption by a key generated from several source bytes and a key creation key
  *
  * @author Frank Schwab
- * @version 7.1.0
+ * @version 7.2.0
  */
 
 public class SplitKeyEncryption implements AutoCloseable {
