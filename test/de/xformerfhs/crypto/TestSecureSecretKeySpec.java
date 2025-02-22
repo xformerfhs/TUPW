@@ -67,7 +67,7 @@ public class TestSecureSecretKeySpec {
 
    @Test
    public void TestNullKeyAndAlgorithm() {
-      try (final SecureSecretKeySpec spec = new SecureSecretKeySpec(null, null)) {
+      try (final SecureSecretKeySpec spec = new SecureSecretKeySpec((byte[])null, null)) {
          fail(EXPECTED_EXCEPTION);
       } catch (NullPointerException e) {
          assertEquals("Exception: " + e.toString(), "Key is null", e.getMessage());
@@ -79,7 +79,7 @@ public class TestSecureSecretKeySpec {
 
    @Test
    public void TestNullKey() {
-      try (final SecureSecretKeySpec spec = new SecureSecretKeySpec(null, ALGORITHM_NAME)) {
+      try (final SecureSecretKeySpec spec = new SecureSecretKeySpec((byte[])null, ALGORITHM_NAME)) {
          fail(EXPECTED_EXCEPTION);
       } catch (NullPointerException e) {
          assertEquals("Exception: " + e.toString(), "Key is null", e.getMessage());

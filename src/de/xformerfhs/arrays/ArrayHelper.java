@@ -26,6 +26,7 @@
 package de.xformerfhs.arrays;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Helper class for array operations that need a simpler interface
@@ -57,7 +58,7 @@ public class ArrayHelper {
       throw new IllegalStateException("This class is not meant to be instanced");
    }
 
-   //******************************************************************
+   //**************************************** **************************
    // Public methods
    //******************************************************************
 
@@ -116,5 +117,35 @@ public class ArrayHelper {
    public static void safeClear(final int[] a) {
       if (a != null)
          Arrays.fill(a, CLEAR_INT);
+   }
+
+   /**
+    * Compares two byte arrays in constant time.
+    *
+    * <p>
+    * The execution time depends only on the length of the shortest array.
+    * This makes side-channel attacks that measure the execution time of a
+    * comparison impossible.
+    * </p>
+    *
+    * @param a First array.
+    * @param b Second array.
+    * @return {@code true}, if the arrays have the same length and the elements have the same values, {@code false}, if not.
+    * @throws NullPointerException if {@code a} or {@code b} is null.
+    */
+   public static boolean constantTimeEquals(final byte[] a, final byte[] b) {
+      final int aLength = Objects.requireNonNull(a).length;
+      final int bLength = Objects.requireNonNull(b).length;
+
+      int result = aLength ^ bLength; // Get difference in the lengths
+
+      final int compareLength = Math.min(aLength, bLength);
+
+      // Now collect the differences for each element
+      for (int i = 0; i < compareLength; i++) {
+         result |= a[i] ^ b[i];
+      }
+
+      return result == 0;  // This is only true if the arrays have the same lengths and the same element values.
    }
 }
