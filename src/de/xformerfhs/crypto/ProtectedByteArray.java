@@ -424,35 +424,22 @@ public final class ProtectedByteArray implements AutoCloseable {
 
    /**
     * Shuffles the positions in the index array.
+    *
+    * <p>This uses Fisher-Yates shuffle.</p>
     */
    private void shuffleIndexArray(final SecureRandom sprng) {
-      int i1;
-      int i2;
+      final int[] a = this.indexArray;
       int swap;
+      for (int i = a.length; i > 0; i--) {
+         int j = sprng.nextInt(i + 1);
 
-      int count = 0;
-
-      final int arrayLength = this.indexArray.length;
-
-      do {
-         i1 = sprng.nextInt(arrayLength);
-         i2 = sprng.nextInt(arrayLength);
-
-         // Swapping is inlined for performance
-         if (i1 != i2) {
-            swap = this.indexArray[i1];
-            this.indexArray[i1] = this.indexArray[i2];
-            this.indexArray[i2] = swap;
-
-            count++;
+         if (i != j) {
+            swap = a[i];
+            a[i] = a[j];
+            a[j] = swap;
          }
-      } while (count < arrayLength);
-
-      // These seemingly unnecessary assignments clear the indices
-      // so one can not see their values in a memory dump
-      i1 = 0;
-      i2 = 0;
-   }
+      }
+  }
 
    /**
     * Masks the index array.
