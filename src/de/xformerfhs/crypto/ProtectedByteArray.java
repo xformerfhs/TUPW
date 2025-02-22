@@ -430,7 +430,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    private void shuffleIndexArray(final SecureRandom sprng) {
       final int[] a = this.indexArray;
       int swap;
-      for (int i = a.length; i > 0; i--) {
+      for (int i = a.length - 1; i > 0; i--) {
          int j = sprng.nextInt(i + 1);
 
          if (i != j) {
