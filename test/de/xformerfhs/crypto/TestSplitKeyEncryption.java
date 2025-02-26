@@ -162,7 +162,6 @@ public class TestSplitKeyEncryption {
     */
    private static final String INVALID_FORMAT_ID_ERROR_MESSAGE = "Invalid format id";
 
-
    /** Loop count for tests */
    private static final int TEST_LOOP_COUNT = 100;
 

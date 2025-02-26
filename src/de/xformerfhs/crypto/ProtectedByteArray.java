@@ -34,7 +34,7 @@
  *     2021-06-09: V2.0.1: Simplified constructors. fhs
  *     2021-09-01: V2.0.2: Some refactoring. fhs
  *     2023-12-11: V2.0.3: Standard naming convention for instance variables. fhs
- *     2025-02-22: V2.1.0: use Fisher-Yates shuffling for shuffling of index array. fhs
+ *     2025-02-22: V2.1.0: Use Fisher-Yates shuffling for shuffling of index array. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -55,17 +55,15 @@ import java.util.Objects;
  * @version 2.1.0
  */
 public final class ProtectedByteArray implements AutoCloseable {
-   //******************************************************************
-   // Private constants
-   //******************************************************************
+   // ******** Private constants ********
 
    /**
-    * Indices and data are stored in arrays which are multiples of this block size
+    * Indices and data are stored in arrays which are multiples of this block size.
     */
    private static final int INDEX_BLOCK_SIZE = 50;
 
    /**
-    * This class can store at most this many data
+    * This class can store at most this many data.
     */
    private static final int MAX_SOURCE_ARRAY_LENGTH = (Integer.MAX_VALUE / INDEX_BLOCK_SIZE) * INDEX_BLOCK_SIZE;
 
@@ -73,46 +71,44 @@ public final class ProtectedByteArray implements AutoCloseable {
    // They can have any negative value.
 
    /**
-    * Pro forma index value for the data length
+    * Pro forma index value for the data length.
     */
    private static final int INDEX_LENGTH =  -3;
 
    /**
-    * Pro forma index value for the start index
+    * Pro forma index value for the start index.
     */
    private static final int INDEX_START  = -97;
 
-   //******************************************************************
-   // Instance variables
-   //******************************************************************
+   // ******** Instance variables ********
 
    /**
-    * Byte array to store the data in
+    * Byte array to store the data in.
     */
    private byte[] dataArray;
 
    /**
-    * Index array into {@code byteArray}
+    * Index array into {@code byteArray}.
     */
    private int[] indexArray;
 
    /**
-    * Length of data in {@code byteArray} in obfuscated form
+    * Length of data in {@code byteArray} in obfuscated form.
     */
    private int storedArrayLength;
 
    /**
-    * Start position in index array
+    * Start position in index array.
     */
    private int indexStart;
 
    /**
-    * Hash code of data in {@code byteArray}
+    * Hash code of data in {@code byteArray}.
     */
    private int hashCode;
 
    /**
-    * Indicator whether the bytes of the source array have changed
+    * Indicator whether the bytes of the source array have changed.
     */
    private boolean hasChanged;
 
@@ -122,14 +118,12 @@ public final class ProtectedByteArray implements AutoCloseable {
    private boolean isValid;
 
    /**
-    * Index masker
+    * Index masker.
     */
    private IndexedMask indexMasker;
 
 
-   //******************************************************************
-   // Constructor
-   //******************************************************************
+   // ******** Constructor ********
 
    /**
     * Constructor for the protected byte array with a source array.
@@ -177,19 +171,15 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
 
-   //******************************************************************
-   // Public methods
-   //******************************************************************
+   // ******** Public methods ********
 
-   /*
-    * Access methods
-    */
+   // -------- Access methods --------
 
    /**
-    * Gets the original array content
+    * Gets the original array content.
     *
-    * @return Original array content
-    * @throws IllegalStateException if the protected array has already been destroyed
+    * @return Original array content.
+    * @throws IllegalStateException if the protected array has already been destroyed.
     */
    public synchronized byte[] getData() {
       checkState();
@@ -198,12 +188,12 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Gets an array element at a given position
+    * Gets an array element at a given position.
     *
-    * @param externalIndex Index of the array element
-    * @return Value of the array element at the given position
-    * @throws ArrayIndexOutOfBoundsException if index is outside of allowed bounds
-    * @throws IllegalStateException          if array has already been destroyed
+    * @param externalIndex Index of the array element.
+    * @return Value of the array element at the given position.
+    * @throws ArrayIndexOutOfBoundsException if index is outside of allowed bounds.
+    * @throws IllegalStateException          if array has already been destroyed.
     */
    public synchronized byte getAt(final int externalIndex) {
       checkStateAndExternalIndex(externalIndex);
@@ -212,12 +202,12 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Sets the array element at a given position to a given value
+    * Sets the array element at a given position to a given value.
     *
-    * @param externalIndex Index of the array element
-    * @param newValue      New value of the array element
-    * @throws ArrayIndexOutOfBoundsException if index is outside of allowed bounds
-    * @throws IllegalStateException          if array has already been destroyed
+    * @param externalIndex Index of the array element.
+    * @param newValue      New value of the array element.
+    * @throws ArrayIndexOutOfBoundsException if index is outside of allowed bounds.
+    * @throws IllegalStateException          if array has already been destroyed.
     */
    public synchronized void setAt(final int externalIndex, final byte newValue) {
       checkStateAndExternalIndex(externalIndex);
@@ -228,10 +218,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Gets the real array length
+    * Gets the real array length.
     *
-    * @return Real length of stored array
-    * @throws IllegalStateException if the protected array has already been destroyed
+    * @return Real length of stored array.
+    * @throws IllegalStateException if the protected array has already been destroyed.
     */
    public synchronized int length() {
       checkState();
@@ -240,10 +230,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Checks whether this ProtectedByteArray is valid
+    * Checks whether this ProtectedByteArray is valid.
     *
     * @return {@code True}, if this ProtectedByteArray is valid.
-    * {@code False}, if it has been deleted
+    * {@code False}, if it has been deleted.
     */
    public synchronized boolean isValid() {
       return this.isValid;
@@ -299,9 +289,7 @@ public final class ProtectedByteArray implements AutoCloseable {
       return result;
    }
 
-   /*
-    * Method for AutoCloseable interface
-    */
+   // -------- Method for AutoCloseable interface --------
 
    /**
     * Secure deletion of protected array.
@@ -315,18 +303,14 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
 
-   //******************************************************************
-   // Private methods
-   //******************************************************************
+   // ******** Private methods ********
 
-   /*
-    * Initialization methods
-    */
+   // -------- Initialization methods --------
 
    /**
-    * Initialize this instance from a source array
+    * Initialize this instance from a source array.
     *
-    * @param sourceArray Array to use as source
+    * @param sourceArray Array to use as source.
     * @param offset      The offset of the data in the byte array.
     * @param len         The length of the data in the byte array.
     */
@@ -341,12 +325,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
 
-   /*
-    * Check methods
-    */
+   // -------- Check methods --------
 
    /**
-    * Checks whether offset and length are valid for the array
+    * Checks whether offset and length are valid for the array.
     *
     * @param sourceArray Source byte array.
     * @param offset      The offset of the data in the byte array.
@@ -360,16 +342,16 @@ public final class ProtectedByteArray implements AutoCloseable {
          throw new IllegalArgumentException("Source array is too large");
 
       if ((offset < 0) || (len < 0))
-         throw new ArrayIndexOutOfBoundsException("offset or length less than zero");
+         throw new ArrayIndexOutOfBoundsException("Offset or length less than zero");
 
       if ((sourceArray.length - offset) < len)
-         throw new IllegalArgumentException("sourceArray too short for offset and length");
+         throw new IllegalArgumentException("Source array too short for offset and length");
    }
 
    /**
-    * Checks whether the protected byte array is in a valid state
+    * Checks whether the protected byte array is in a valid state.
     *
-    * @throws IllegalStateException if the protected array has already been destroyed
+    * @throws IllegalStateException if the protected array has already been destroyed.
     */
    private void checkState() {
       if (!this.isValid)
@@ -377,10 +359,10 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Checks whether a given external index is valid
+    * Checks whether a given external index is valid.
     *
-    * @param externalIndex Index value to be checked
-    * @throws ArrayIndexOutOfBoundsException if index is out of array bounds
+    * @param externalIndex Index value to be checked.
+    * @throws ArrayIndexOutOfBoundsException if index is out of array bounds.
     */
    private void checkExternalIndex(final int externalIndex) {
       if ((externalIndex < 0) || (externalIndex >= getRealLength()))
@@ -388,26 +370,24 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Checks the state and then the validity of the given external index
+    * Checks the state and then the validity of the given external index.
     *
-    * @param externalIndex Index value to be checked
-    * @throws ArrayIndexOutOfBoundsException if index is out of array bounds
-    * @throws IllegalStateException          if the protected array has already been destroyed
+    * @param externalIndex Index value to be checked.
+    * @throws ArrayIndexOutOfBoundsException if index is out of array bounds.
+    * @throws IllegalStateException          if the protected array has already been destroyed.
     */
    private void checkStateAndExternalIndex(final int externalIndex) {
       checkState();
       checkExternalIndex(externalIndex);
    }
 
-   /*
-    * Methods for data structure initialization and maintenance
-    */
+   // -------- Methods for data structure initialization and maintenance --------
 
    /**
     * Calculates the array size required for storing the data.
     *
-    * @param forSize Original size
-    * @return Size of protected array
+    * @param forSize Original size.
+    * @return Size of protected array.
     */
    private int getStoreLength(final int forSize) {
       final int padLength = INDEX_BLOCK_SIZE - (forSize % INDEX_BLOCK_SIZE);
@@ -440,7 +420,7 @@ public final class ProtectedByteArray implements AutoCloseable {
             a[j] = swap;
          }
       }
-  }
+   }
 
    /**
     * Masks the index array.
@@ -451,7 +431,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Sets up the index array by initializing and shuffling it
+    * Sets up the index array by initializing and shuffling it.
     */
    private void setUpIndexArray(final SecureRandom sprng) {
       initializeIndexArray();
@@ -460,9 +440,9 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Allocates and initializes all necessary arrays
+    * Allocates and initializes all necessary arrays.
     *
-    * @param sourceLength Length of source array
+    * @param sourceLength Length of source array.
     */
    private void initializeDataStructures(final int sourceLength) {
       this.indexMasker = new IndexedMask();
@@ -486,12 +466,12 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Calculate start index
+    * Calculate start index.
     *
-    * @param sourceLength Length of source
-    * @param storeLength  Length of store
-    * @param sprng        Secure pseudo random number generator
-    * @return             Start index in index array
+    * @param sourceLength Length of source.
+    * @param storeLength  Length of store.
+    * @param sprng        Secure pseudo random number generator.
+    * @return             Start index in index array.
     */
    private int getStartIndex(final int sourceLength, final int storeLength, final SecureRandom sprng) {
       final int supStart = storeLength - sourceLength + 1;
@@ -503,7 +483,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Clears all data
+    * Clears all data.
     */
    private void clearData() {
       this.hashCode = 0;
@@ -526,21 +506,21 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Convert between real index and masked index
+    * Convert between real index and masked index.
     *
-    * @param sourceIndex The index value to convert
-    * @param forPosition The position of the index value
-    * @return Converted index
+    * @param sourceIndex The index value to convert.
+    * @param forPosition The position of the index value.
+    * @return Converted index.
     */
    private int convertIndex(final int sourceIndex, final int forPosition) {
       return this.indexMasker.getIntMask(forPosition) ^ sourceIndex;
    }
 
    /**
-    * Gets the array index from the external index
+    * Gets the array index from the external index.
     *
-    * @param externalIndex External index
-    * @return The index into the byte array
+    * @param externalIndex External index.
+    * @return The index into the byte array.
     */
    private int getArrayIndex(final int externalIndex) {
       final int position = externalIndex + convertIndex(this.indexStart, INDEX_START);
@@ -552,9 +532,10 @@ public final class ProtectedByteArray implements AutoCloseable {
     * Methods for accessing data from or to byte array
     */
 
-   /** Gets the real array length without a state check
+   /**
+    * Gets the real array length without a state check.
     *
-    * @return Real length
+    * @return Real length.
     */
    private int getRealLength() {
       return convertIndex(this.storedArrayLength, INDEX_LENGTH);
@@ -563,7 +544,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    /**
     * Sets the destination array to the values in the source array.
     *
-    * @param sourceArray Source byte array
+    * @param sourceArray Source byte array.
     * @param offset      The offset of the data in the byte array.
     * @param len         The length of the data in the byte array.
     */
@@ -580,7 +561,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    /**
     * Gets the values from the protected array.
     *
-    * @return Values stored in protected byte array
+    * @return Values stored in protected byte array.
     */
    private byte[] getValues() {
       final byte[] result = new byte[getRealLength()];
@@ -592,7 +573,7 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Calculates the hash code of the content
+    * Calculates the hash code of the content.
     */
    private void calculateHashCode() {
       final byte[] content = getValues();
