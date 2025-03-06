@@ -35,6 +35,7 @@
  *     2021-09-01: V2.0.2: Some refactoring. fhs
  *     2023-12-11: V2.0.3: Standard naming convention for instance variables. fhs
  *     2025-02-22: V2.1.0: Use Fisher-Yates shuffling for shuffling of index array. fhs
+ *     2025-03-03: V2.2.0: Simplified creation of shuffled index array. fhs
  */
 package de.xformerfhs.crypto;
 
@@ -52,7 +53,7 @@ import java.util.Objects;
  * </p>
  *
  * @author Frank Schwab
- * @version 2.1.0
+ * @version 2.2.0
  */
 public final class ProtectedByteArray implements AutoCloseable {
    // ******** Private constants ********
@@ -396,29 +397,13 @@ public final class ProtectedByteArray implements AutoCloseable {
    }
 
    /**
-    * Initializes the index array.
+    * Initializes the index array in a shuffled form.
     */
-   private void initializeIndexArray() {
-      for (int i = 0; i < this.indexArray.length; i++)
-         this.indexArray[i] = i;
-   }
-
-   /**
-    * Shuffles the positions in the index array.
-    *
-    * <p>This uses Fisher-Yates shuffle.</p>
-    */
-   private void shuffleIndexArray(final SecureRandom sprng) {
-      final int[] a = this.indexArray;
-      int swap;
-      for (int i = a.length - 1; i > 0; i--) {
-         int j = sprng.nextInt(i + 1);
-
-         if (i != j) {
-            swap = a[i];
-            a[i] = a[j];
-            a[j] = swap;
-         }
+   private void initializeShuffledIndexArray(final SecureRandom sprng) {
+      for (int i = 1; i < this.indexArray.length; i++) {
+         int j = sprng.nextInt(i+1);
+         this.indexArray[i] = this.indexArray[j];
+         this.indexArray[j] = i;
       }
    }
 
@@ -434,8 +419,7 @@ public final class ProtectedByteArray implements AutoCloseable {
     * Sets up the index array by initializing and shuffling it.
     */
    private void setUpIndexArray(final SecureRandom sprng) {
-      initializeIndexArray();
-      shuffleIndexArray(sprng);
+      initializeShuffledIndexArray(sprng);
       maskIndexArray();
    }
 
