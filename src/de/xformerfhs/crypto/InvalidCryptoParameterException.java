@@ -24,13 +24,16 @@
  */
 package de.xformerfhs.crypto;
 
+import java.io.Serial;
+
 /**
- * Exception to indicate that some parameter to a cryptographic method is invalid
+ * Exception to indicate that some parameter to a cryptographic method is invalid.
  *
  * @author FrankSchwab
  * @version 1.0.1
  */
 public class InvalidCryptoParameterException extends Exception {
+   @Serial
    private static final long serialVersionUID = 5118897280592222265L;
 
    public InvalidCryptoParameterException() {

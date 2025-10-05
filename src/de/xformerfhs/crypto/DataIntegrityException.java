@@ -25,8 +25,10 @@
  */
 package de.xformerfhs.crypto;
 
+import java.io.Serial;
+
 /**
- * Exception to indicate that data was tampered with
+ * Exception to indicate that data was tampered with.
  *
  * @author FrankSchwab
  * @version 1.0.2
@@ -36,6 +38,7 @@ public class DataIntegrityException extends Exception {
    // Serialization constant
    //******************************************************************
 
+   @Serial
    private static final long serialVersionUID = -1531713327290769502L;
 
    //******************************************************************
